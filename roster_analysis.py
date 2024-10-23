@@ -5,8 +5,8 @@ import pandas as pd
 dev_trait_multipliers = {
     'NORMAL': 1.00,
     'IMPACT': 1.10,
-    'STAR': 1.2,
-    'ELITE': 1.3
+    'STAR': 1.25,
+    'ELITE': 1.5
 }
 
 # Define the remaining years of development for different player years
@@ -57,7 +57,7 @@ def process_roster(roster_path):
     return roster_df
 
 if __name__ == "__main__":
-    roster_path = 'UCLA Dynasty - 2030 Roster.csv'
+    roster_path = 'USC Dynasty - 2025 raw.csv'
     roster_df = process_roster(roster_path)
 
     print("Player valuations have been recalculated and saved to CSV.")
