@@ -207,7 +207,7 @@ def process_roster_and_create_recruiting_plan(roster_path):
     return roster_df, recruiting_plan
 
 if __name__ == "__main__":
-    roster_path = 'Texas Dynasty - 2033 Raw.csv'
+    roster_path = 'Texas Dynasty - 2034 Roster.csv'
     roster_df, recruiting_plan = process_roster_and_create_recruiting_plan(roster_path)
 
     print("Player valuations and statuses have been recalculated and saved to CSV.")
