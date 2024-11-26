@@ -78,7 +78,7 @@ starters_count = {
 def calculate_player_value(row):
     dev_multiplier = dev_trait_multipliers.get(row['DEV TRAIT'], 1.00)
     remaining_dev_years = remaining_years.get(row['YEAR'], 0)
-    value = round(row['RATING'] * dev_multiplier * (1 + remaining_dev_years / 4) * (1 - rs_discount), 2)
+    value = round(row['BASE RATING'] * dev_multiplier * (1 + remaining_dev_years / 4) * (1 - rs_discount), 2)
     return value
 
 # Decide if player is safe, at risk, or on the cut list
@@ -90,7 +90,7 @@ def player_status(row):
     3. If a player's value is less than 100, they are considered 'CUT'.
     4. If a player is the best at his position based on their ovr, he is always considered 'SAFE'."""
 
-    value = row['Value']
+    value = row['VALUE']
     year = row['YEAR']
     best_at_position = row['Best at Position']
 
@@ -131,17 +131,17 @@ def calculate_position_grade(avg_value):
 # Function to calculate blended measure of starters and backups
 def calculate_blended_measure(df, position):
     starters_num = starters_count.get(position, 1)
-    position_df = df[df['POSITION'] == position].sort_values(by='Value', ascending=False)
+    position_df = df[df['POSITION'] == position].sort_values(by='VALUE', ascending=False)
     starters = position_df.head(starters_num)
     backups = position_df.tail(len(position_df) - starters_num)
 
     if len(starters) > 0:
-        starters_avg = starters['Value'].mean()
+        starters_avg = starters['VALUE'].mean()
     else:
         starters_avg = 0
 
     if len(backups) > 0:
-        backups_avg = backups['Value'].mean()
+        backups_avg = backups['VALUE'].mean()
     else:
         backups_avg = 0
 
@@ -153,14 +153,22 @@ def calculate_blended_measure(df, position):
 def process_roster_and_create_recruiting_plan(roster_path):
     roster_df = pd.read_csv(roster_path)
 
+    # Ensure the required columns are present
+    required_columns = [
+        'POSITION', 'FIRST NAME', 'LAST NAME', 'YEAR', 'RATING', 'BASE RATING',
+        'DEV TRAIT', 'VALUE', 'STATUS', 'CUT', 'REDSHIRT', 'DRAFTED'
+    ]
+    if not all(column in roster_df.columns for column in required_columns):
+        raise ValueError("CSV file is missing one or more required columns.")
+
     # Calculate player values
-    roster_df['Value'] = roster_df.apply(calculate_player_value, axis=1)
+    roster_df['VALUE'] = roster_df.apply(calculate_player_value, axis=1)
 
     # Determine the best player at each position
     roster_df['Best at Position'] = roster_df.groupby('POSITION')['RATING'].transform(lambda x: x == x.max())
 
     # Apply player status function
-    roster_df['Status'] = roster_df.apply(player_status, axis=1)
+    roster_df['STATUS'] = roster_df.apply(player_status, axis=1)
 
     # Drop the 'Best at Position' column
     roster_df.drop(columns=['Best at Position'], inplace=True)
@@ -169,7 +177,7 @@ def process_roster_and_create_recruiting_plan(roster_path):
     roster_df.to_csv('player_values_corrected.csv', index=False)
 
     # Calculate the number of players at each position for the next season
-    next_season_counts = roster_df[roster_df['Status'] != 'GRADUATING'].groupby('POSITION').size()
+    next_season_counts = roster_df[roster_df['STATUS'] != 'GRADUATING'].groupby('POSITION').size()
 
     # Calculate the blended measure for each position
     blended_values = {position: calculate_blended_measure(roster_df, position) for position in position_requirements.keys()}
@@ -207,7 +215,7 @@ def process_roster_and_create_recruiting_plan(roster_path):
     return roster_df, recruiting_plan
 
 if __name__ == "__main__":
-    roster_path = 'Texas Dynasty - 2034 Roster.csv'
+    roster_path = 'Texas Dynasty - 2034 Raw Roster.csv'
     roster_df, recruiting_plan = process_roster_and_create_recruiting_plan(roster_path)
 
     print("Player valuations and statuses have been recalculated and saved to CSV.")
