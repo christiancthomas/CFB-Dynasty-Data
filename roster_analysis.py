@@ -1,5 +1,6 @@
 
 import pandas as pd
+import glob
 
 # Define the development trait multipliers
 dev_trait_multipliers = {
@@ -215,8 +216,9 @@ def process_roster_and_create_recruiting_plan(roster_path):
     return roster_df, recruiting_plan
 
 if __name__ == "__main__":
-    roster_path = 'USC Dynasty - 2026 Roster.csv'
-    roster_df, recruiting_plan = process_roster_and_create_recruiting_plan(roster_path)
-
-    print("Player valuations and statuses have been recalculated and saved to CSV.")
-    print("Recruiting plan has been created and saved to CSV.")
+    roster_files = glob.glob('*[Rr]oster.csv')
+    for roster_path in roster_files:
+        roster_df, recruiting_plan = process_roster_and_create_recruiting_plan(roster_path)
+        print(f"Processed {roster_path}")
+        print("Player valuations and statuses have been recalculated and saved to CSV.")
+        print("Recruiting plan has been created and saved to CSV.")
