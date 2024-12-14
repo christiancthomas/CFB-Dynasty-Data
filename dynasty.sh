@@ -24,7 +24,7 @@ echo "Using script: $SCRIPT_PATH"
 echo "Output folder: $DOWNLOADS_FOLDER"
 
 # Activate the virtual environment
-source /Users/christianthomas/Developer/CFB-Dynasty-Data/venv/bin/activate
+source "$SCRIPT_DIR/venv/bin/activate"
 
 # Run the roster_analysis.py script with the found CSV file as input
 # and output the resulting CSVs to the Downloads folder
