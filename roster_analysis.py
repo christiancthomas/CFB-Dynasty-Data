@@ -1,6 +1,6 @@
-
 import pandas as pd
 import glob
+import os
 
 # Define the development trait multipliers
 dev_trait_multipliers = {
@@ -174,9 +174,6 @@ def process_roster_and_create_recruiting_plan(roster_path):
     # Drop the 'Best at Position' column
     roster_df.drop(columns=['Best at Position'], inplace=True)
 
-    # Save the player values to a CSV file
-    roster_df.to_csv('player_values_corrected.csv', index=False)
-
     # Calculate the number of players at each position for the next season
     next_season_counts = roster_df[roster_df['STATUS'] != 'GRADUATING'].groupby('POSITION').size()
 
@@ -210,15 +207,20 @@ def process_roster_and_create_recruiting_plan(roster_path):
 
     recruiting_plan['Priority'] = recruiting_plan.apply(determine_priority, axis=1)
 
-    # Save the recruiting plan to a CSV file
-    recruiting_plan.to_csv('recruiting_plan.csv', index=False)
-
     return roster_df, recruiting_plan
 
 if __name__ == "__main__":
-    roster_files = glob.glob('*[Rr]oster.csv')
+    downloads_folder = os.path.expanduser('~/Downloads')
+    data_folder = os.path.join(downloads_folder, 'cfb_dynasty_data')
+    if not os.path.exists(data_folder):
+        os.mkdir(data_folder)
+    roster_files = glob.glob(os.path.join(downloads_folder, '*[Rr]oster.csv'))
     for roster_path in roster_files:
         roster_df, recruiting_plan = process_roster_and_create_recruiting_plan(roster_path)
+        player_values_path = os.path.join(data_folder, 'player_values_corrected.csv')
+        recruiting_plan_path = os.path.join(data_folder, 'recruiting_plan.csv')
+        roster_df.to_csv(player_values_path, index=False)
+        recruiting_plan.to_csv(recruiting_plan_path, index=False)
         print(f"Processed {roster_path}")
         print("Player valuations and statuses have been recalculated and saved to CSV.")
         print("Recruiting plan has been created and saved to CSV.")
