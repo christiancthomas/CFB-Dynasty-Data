@@ -1,66 +1,91 @@
 import pandas as pd
+import os
+import glob
 
-# Load the current roster data
-roster_df = pd.read_csv('/Users/christianthomas/Developer/CFB-Dynasty-Data/USC Dynasty - Sheet11-2.csv')
 
-# Filter out players who are graduating or cut
-filtered_roster_df = roster_df[(roster_df['STATUS'] != 'GRADUATING') & (roster_df['CUT'] != True)]
-
-# Define a function to advance the year
 def advance_year(year, redshirt):
     year_mapping = {
         'HS': 'FR',
         'FR': 'SO',
-        'FR (RS)': 'SO (RS)',
         'SO': 'JR',
-        'SO (RS)': 'JR (RS)',
         'JR': 'SR',
-        'JR (RS)': 'SR (RS)'
+        'SR': 'GRADUATED',
+        'FR (RS)': 'SO (RS)',
+        'SO (RS)': 'JR (RS)',
+        'JR (RS)': 'SR (RS)',
+        'SR (RS)': 'GRADUATED'
     }
     if redshirt:
         if 'RS' not in year:
             return f"{year} (RS)"
     return year_mapping.get(year, year)
 
-# Apply the function to advance the year for each player
-filtered_roster_df['YEAR'] = filtered_roster_df.apply(lambda row: advance_year(row['YEAR'], row['REDSHIRT']), axis=1)
+def generate_roster(roster_file, recruiting_file):
 
-# # Set all REDSHIRT values to False
-# filtered_roster_df['REDSHIRT'] = False
+    # Load the roster data
+    roster_df = pd.read_csv(roster_file[0])
 
-# Print the first few rows to verify the changes
-print(filtered_roster_df.head())
+    # Apply the function to advance the year for each player
+    roster_df['YEAR'] = roster_df.apply(lambda row: advance_year(row['YEAR'], row['REDSHIRT']), axis=1)
 
-# Load the recruiting data
-recruiting_df = pd.read_csv('/Users/christianthomas/Developer/CFB-Dynasty-Data/USC Dynasty - 2026 Recruiting Hub.csv')
+    # Filter the roster data to include only players who are not graduating or drafted
+    filtered_roster_df = roster_df[(roster_df['YEAR'] != 'GRADUATED') & (roster_df['DRAFTED'].isna())].copy()
 
-# Filter the recruiting data to include only players committed to USC
-usc_recruits_df = recruiting_df[recruiting_df['COMMITTED TO'] == 'USC'].copy()
+    # Load the recruiting data
+    recruiting_df = pd.read_csv(recruiting_file[0])
 
-# Advance the year for recruits from HS to FR
-usc_recruits_df.loc[:, 'YEAR'] = usc_recruits_df['YEAR'].apply(lambda year: advance_year(year, False))
+    # Filter the recruiting data to include only players committed to your school
+    school_name = input("Enter the name of your school: ")
+    recruits_df = recruiting_df[recruiting_df['COMMITTED TO'] == school_name.upper()].copy()
 
-# Combine the filtered roster data with the USC recruits
-new_roster_df = pd.concat([filtered_roster_df, usc_recruits_df], ignore_index=True)
+    # Advance the year for recruits from HS to FR
+    recruits_df.loc[:, 'YEAR'] = recruits_df['YEAR'].apply(lambda year: advance_year(year, False))
 
-# Drop the specified columns
-columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'Unnamed: 8', 'CITY', 'STATE']
-new_roster_df.drop(columns=columns_to_drop, inplace=True)
+    # Combine the filtered roster data with the recruits
+    new_roster_df = pd.concat([filtered_roster_df, recruits_df], ignore_index=True)
 
-# Define the position order
-position_order = ['QB', 'HB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'LE', 'RE', 'DT', 'LOLB', 'MLB', 'ROLB', 'CB', 'FS', 'SS', 'K', 'P']
+    # Drop the specified columns
+    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'Unnamed: 8', 'CITY', 'STATE']
+    new_roster_df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
 
-# Create a categorical type for the position column based on the defined order
-new_roster_df['POSITION'] = pd.Categorical(new_roster_df['POSITION'], categories=position_order, ordered=True)
+    # Define the position order
+    position_order = ['QB', 'HB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'LE', 'RE', 'DT', 'LOLB', 'MLB', 'ROLB', 'CB', 'FS', 'SS', 'K', 'P', 'ATH']
 
-# Sort the roster by position and then by rating in descending order
-new_roster_df.sort_values(by=['POSITION', 'RATING'], ascending=[True, False], inplace=True)
+    # Create a categorical type for the position column based on the defined order
+    new_roster_df['POSITION'] = pd.Categorical(new_roster_df['POSITION'], categories=position_order, ordered=True)
 
-# Set the values of the specified columns to empty strings
-new_roster_df[['RATING', 'BASE RATING', 'VALUE', 'STATUS']] = ""
+    # Sort the roster by position and then by rating in descending order
+    new_roster_df.sort_values(by=['POSITION', 'RATING'], ascending=[True, False], inplace=True)
 
-# Set all REDSHIRT and CUT values to False
-new_roster_df[['REDSHIRT', 'CUT']] = False
+    # Ensure the columns exist before setting their values
+    for col in ['RATING', 'BASE RATING', 'VALUE', 'STATUS']:
+        if col not in new_roster_df.columns:
+            new_roster_df[col] = ""
 
-# Save the new roster to a CSV file
-new_roster_df.to_csv('/Users/christianthomas/Developer/CFB-Dynasty-Data/2026 Roster Raw.csv', index=False)
+    # Set the values of the specified columns to empty strings
+    new_roster_df[['RATING', 'BASE RATING', 'VALUE', 'STATUS']] = ""
+
+    # Ensure the columns exist before setting their values
+    for col in ['REDSHIRT', 'CUT']:
+        if col not in new_roster_df.columns:
+            new_roster_df[col] = False
+
+    # Set all REDSHIRT and CUT values to False
+    new_roster_df[['REDSHIRT', 'CUT']] = False
+
+    # Return the new roster
+    return new_roster_df
+
+if __name__ == "__main__":
+    downloads_folder = os.path.expanduser('~/Downloads')
+    data_folder = os.path.join(downloads_folder, 'cfb_dynasty_data')
+    if not os.path.exists(data_folder):
+        os.mkdir(data_folder)
+    roster_file = glob.glob(os.path.join(downloads_folder, '*[Rr]oster.csv'))
+    recruiting_file = glob.glob(os.path.join(downloads_folder, '*[Rr]ecruiting*.csv'))
+    for roster_path in roster_file:
+        roster_df = generate_roster(roster_file, recruiting_file)
+        new_roster_path = os.path.join(data_folder, 'New Roster.csv')
+        roster_df.to_csv(new_roster_path, index=False)
+        print(f"Processed {roster_path}")
+        print("New roster is now available in the data folder.")
