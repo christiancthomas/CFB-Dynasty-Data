@@ -28,8 +28,8 @@ def generate_roster(roster_file, recruiting_file):
     # Apply the function to advance the year for each player
     roster_df['YEAR'] = roster_df.apply(lambda row: advance_year(row['YEAR'], row['REDSHIRT']), axis=1)
 
-    # Filter the roster data to include only players who are not graduating or drafted
-    filtered_roster_df = roster_df[(roster_df['YEAR'] != 'GRADUATED') & (roster_df['DRAFTED'].isna())].copy()
+    # Filter the roster data to include only players who are not graduating or drafted or cut
+    filtered_roster_df = roster_df[(roster_df['YEAR'] != 'GRADUATED') & (roster_df['CUT'] != True) & (roster_df['DRAFTED'].isna())].copy()
 
     # Load the recruiting data
     recruiting_df = pd.read_csv(recruiting_file[0])
