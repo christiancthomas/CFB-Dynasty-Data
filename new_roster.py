@@ -22,17 +22,11 @@ def advance_year(year, redshirt):
 
 def generate_roster(roster_df, recruits_df):
 
-    # Load the roster data
-    # roster_df = pd.read_csv(roster_file[0])
-
     # Apply the function to advance the year for each player
     roster_df['YEAR'] = roster_df.apply(lambda row: advance_year(row['YEAR'], row['REDSHIRT']), axis=1)
 
     # Filter the roster data to include only players who are not graduating or drafted or cut
     filtered_roster_df = roster_df[(roster_df['YEAR'] != 'GRADUATED') & (roster_df['CUT'] != True) & (roster_df['DRAFTED'].isna())].copy()
-
-    # Load the recruiting data
-    # recruiting_df = pd.read_csv(recruiting_file[0])
 
     # Filter the recruiting data to include only players committed to your school
     school_name = input("Enter the name of your school: ")
@@ -97,5 +91,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-else: 
-    print("generate_roster() is being run in another module.")
