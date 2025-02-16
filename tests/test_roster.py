@@ -33,8 +33,6 @@ class TestRosterScripts(unittest.TestCase):
             'REDSHIRT': [False, True, False, False],
             'DRAFTED': [None, None, None, None]
         }
-        # roster_df = pd.DataFrame(roster_data)
-        # roster_df.to_csv(MOCK_ROSTER_FILE, index=False)
 
         # Create mock recruiting CSV
         recruiting_data = {
@@ -52,24 +50,22 @@ class TestRosterScripts(unittest.TestCase):
             'DRAFTED': [None, None],
             'COMMITTED TO': ['USC', 'USC']
         }
-        # recruiting_df = pd.DataFrame(recruiting_data)
-        # recruiting_df.to_csv(MOCK_RECRUITING_FILE, index=False)
         pd.DataFrame(roster_data).to_csv(MOCK_ROSTER_FILE, index=False)
         pd.DataFrame(recruiting_data).to_csv(MOCK_RECRUITING_FILE, index=False)
 
-    # @classmethod
-    # def tearDownClass(cls):
-    #     # Remove mock CSV files
-    #     os.remove(MOCK_ROSTER_FILE)
-    #     print(f"Removed {MOCK_ROSTER_FILE}")
-    #     os.remove(MOCK_RECRUITING_FILE)
-    #     print(f"Removed {MOCK_RECRUITING_FILE}")
-    #     if os.path.exists(OUTPUT_FILE):
-    #         os.remove(OUTPUT_FILE)
-    #         print(f"Removed {OUTPUT_FILE}")
-    #     if os.path.exists(OUTPUT_DIR):
-    #         shutil.rmtree(OUTPUT_DIR)
-    #         print(f"Removed {OUTPUT_DIR}")
+    @classmethod
+    def tearDownClass(cls):
+        # Remove mock CSV files
+        os.remove(MOCK_ROSTER_FILE)
+        print(f"Removed {MOCK_ROSTER_FILE}")
+        os.remove(MOCK_RECRUITING_FILE)
+        print(f"Removed {MOCK_RECRUITING_FILE}")
+        if os.path.exists(OUTPUT_FILE):
+            os.remove(OUTPUT_FILE)
+            print(f"Removed {OUTPUT_FILE}")
+        if os.path.exists(OUTPUT_DIR):
+            shutil.rmtree(OUTPUT_DIR)
+            print(f"Removed {OUTPUT_DIR}")
 
     def test_generate_roster(self):
         roster_df = pd.read_csv(MOCK_ROSTER_FILE)
