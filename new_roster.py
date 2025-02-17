@@ -20,7 +20,7 @@ def advance_year(year, redshirt):
             return f"{year} (RS)"
     return year_mapping.get(year, year)
 
-def generate_roster(roster_df, recruits_df):
+def generate_roster(roster_df, recruits_df, school_name=None):
 
     # Apply the function to advance the year for each player
     roster_df['YEAR'] = roster_df.apply(lambda row: advance_year(row['YEAR'], row['REDSHIRT']), axis=1)
@@ -29,7 +29,8 @@ def generate_roster(roster_df, recruits_df):
     filtered_roster_df = roster_df[(roster_df['YEAR'] != 'GRADUATED') & (roster_df['CUT'] != True) & (roster_df['DRAFTED'].isna())].copy()
 
     # Filter the recruiting data to include only players committed to your school
-    school_name = input("Enter the name of your school: ")
+    if not school_name:
+        school_name = input("Enter the name of your school: ")
     recruits_df = recruits_df[recruits_df['COMMITTED TO'] == school_name.upper()].copy()
 
     # Advance the year for recruits from HS to FR
@@ -84,7 +85,7 @@ def _to_csv(data_path, data_folder, new_path='New_Roster.csv'):
         print(f"Processed {roster_path}")
         print("New roster is now available in the data folder.")
 
-def main(): 
+def main():
     downloads_folder = os.path.expanduser('~/Downloads')
     data_folder = os.path.join(downloads_folder, 'cfb_dynasty_data')
     _to_csv(downloads_folder, data_folder)
