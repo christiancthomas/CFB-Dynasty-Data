@@ -179,6 +179,11 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
     # Calculate the blended measure for each position
     blended_values = {position: calculate_blended_measure(roster_df, position) for position in position_requirements.keys()}
 
+    # Sort roster by position order and rating descending
+    position_order = ['QB', 'HB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'LE', 'RE', 'DT', 'LOLB', 'MLB', 'ROLB', 'CB', 'FS', 'SS', 'K', 'P', 'ATH']
+    roster_df['POSITION'] = pd.Categorical(roster_df['POSITION'], categories=position_order, ordered=True)
+    roster_df.sort_values(by=['POSITION', 'RATING'], ascending=[True, False], inplace=True)
+
     # Debugging: Print lengths of arrays
     print(f"Positions: {len(position_requirements.keys())}")
     print(f"Next Season Counts: {len(next_season_counts)}")
