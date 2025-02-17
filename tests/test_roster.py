@@ -19,14 +19,15 @@ class TestRosterScripts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Create mock roster CSV
+        print('creating mock roster\n')
         roster_data = {
             'POSITION': ['QB', 'FS', 'ROLB', 'CB'],
-            'FIRST NAME': ['CHRISTIAN', 'KALLUM', 'SAM', 'TYLOR'], 
-            'LAST NAME': ['THOMAS', 'GRIFFIN', 'VEGA', 'RUSSELL'], 
-            'YEAR': ['FR', 'SO (RS)', 'SR', 'SO (RS)'], 
-            'RATING': [91, 90, 92, 72], 
+            'FIRST NAME': ['CHRISTIAN', 'KALLUM', 'SAM', 'TYLOR'],
+            'LAST NAME': ['THOMAS', 'GRIFFIN', 'VEGA', 'RUSSELL'],
+            'YEAR': ['FR', 'SO (RS)', 'SR', 'SO (RS)'],
+            'RATING': [91, 90, 92, 72],
             'BASE RATING': [88, 89, 90, 69],
-            'DEV TRAIT': ['ELITE', 'STAR', 'IMPACT', 'NORMAL'], 
+            'DEV TRAIT': ['ELITE', 'STAR', 'IMPACT', 'NORMAL'],
             'VALUE': ['', '', '', ''],
             'STATUS': ['ACTIVE', 'ACTIVE', 'GRADUATING', 'ACTIVE'],
             'CUT': [False, False, False, True],
@@ -35,49 +36,60 @@ class TestRosterScripts(unittest.TestCase):
         }
 
         # Create mock recruiting CSV
+        print('creating mock recruiting board\n')
         recruiting_data = {
-            'POSITION': ['QB', 'FS'],
-            'FIRST NAME': ['JACK', 'JAMES'], 
-            'LAST NAME': ['SMITH', 'JOHNSON'], 
-            'YEAR': ['HS', 'HS'], 
-            'RATING': [85, 87], 
-            'BASE RATING': [83, 85],
-            'DEV TRAIT': ['NORMAL', 'STAR'], 
-            'VALUE': ['', ''],
-            'STATUS': ['ACTIVE', 'ACTIVE'],
-            'CUT': [False, False],
-            'REDSHIRT': [False, False],
-            'DRAFTED': [None, None],
-            'COMMITTED TO': ['USC', 'USC']
+            'POSITION': ['QB', 'FS', 'CB'],
+            'FIRST NAME': ['JACK', 'JAMES', 'ORION'],
+            'LAST NAME': ['SMITH', 'JOHNSON', 'GREENWOOD'],
+            'YEAR': ['HS', 'HS', 'HS'],
+            'DEV TRAIT': ['NORMAL', 'STAR', 'ELITE'],
+            'STARS': [4, 5, 4],
+            'GEM STATUS': ['NORMAL', 'BUST', 'GEM'],
+            'COMMITTED TO': ['USC', 'TEXAS A&M', 'TEXAS TECH'],
+            'CITY': ['LOS ANGELES', 'DALLAS', 'KILLEEN'],
+            'STATE': ['CA', 'TX', 'TX']
         }
         pd.DataFrame(roster_data).to_csv(MOCK_ROSTER_FILE, index=False)
         pd.DataFrame(recruiting_data).to_csv(MOCK_RECRUITING_FILE, index=False)
+
 
     @classmethod
     def tearDownClass(cls):
         # Remove mock CSV files
         os.remove(MOCK_ROSTER_FILE)
-        print(f"Removed {MOCK_ROSTER_FILE}")
         os.remove(MOCK_RECRUITING_FILE)
-        print(f"Removed {MOCK_RECRUITING_FILE}")
         if os.path.exists(OUTPUT_FILE):
             os.remove(OUTPUT_FILE)
-            print(f"Removed {OUTPUT_FILE}")
         if os.path.exists(OUTPUT_DIR):
             shutil.rmtree(OUTPUT_DIR)
-            print(f"Removed {OUTPUT_DIR}")
 
     def test_generate_roster(self):
         roster_df = pd.read_csv(MOCK_ROSTER_FILE)
         recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
-        new_roster_df = generate_roster(roster_df, recruiting_df)
+        new_roster_df = generate_roster(roster_df, recruiting_df, 'TEXAS TECH')
         if not os.path.exists(OUTPUT_DIR):
             os.mkdir(OUTPUT_DIR)
         new_roster_df.to_csv(OUTPUT_FILE, index=False)
-        print("generated roster")
-        print(f"Output file: {OUTPUT_FILE}")
-        print(os.path.exists(OUTPUT_FILE))
         self.assertTrue(os.path.exists(OUTPUT_FILE))
+
+    def test_incoming_recruits(self):
+        # test that only incoming recruits from school = school_name are included in the new roster
+        roster_df = pd.read_csv(MOCK_ROSTER_FILE)
+        recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
+        school_name = 'TEXAS TECH'
+        new_roster_df = generate_roster(roster_df, recruiting_df, school_name)
+
+        # collect a list of the first and last names of all the recruits who committed to school_name in the recruiting_df
+        committed_recruits = recruiting_df[recruiting_df['COMMITTED TO'] == school_name.upper()][['FIRST NAME', 'LAST NAME']]
+        non_commits = recruiting_df[recruiting_df['COMMITTED TO'] != school_name.upper()][['FIRST NAME', 'LAST NAME']]
+
+        # check that the only recruits from the recruiting_df who are in the new_roster_df are the ones who committed to school_name using first and last names and additionally none of the non_commits made it into the new_roster_df
+        for _, recruit in committed_recruits.iterrows():
+            self.assertTrue(((new_roster_df['FIRST NAME'] == recruit['FIRST NAME']) & (new_roster_df['LAST NAME'] == recruit['LAST NAME'])).any())
+
+        # Check that no non-committed recruits are in the new roster
+        for _, recruit in non_commits.iterrows():
+            self.assertFalse(((new_roster_df['FIRST NAME'] == recruit['FIRST NAME']) & (new_roster_df['LAST NAME'] == recruit['LAST NAME'])).any())
 
     def test_analyze_roster(self):
         # Run the roster_analysis.py script as a subprocess
