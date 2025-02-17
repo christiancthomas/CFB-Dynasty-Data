@@ -19,11 +19,9 @@ class TestRosterScripts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Create mock roster CSV
-        print('creating mock roster\n')
         roster_data = u.create_mock_roster()
 
         # Create mock recruiting CSV
-        print('creating mock recruiting board\n')
         recruiting_data = u.create_mock_recruits()
 
         # Save mock CSV files
@@ -42,6 +40,7 @@ class TestRosterScripts(unittest.TestCase):
             shutil.rmtree(OUTPUT_DIR)
 
     def test_generate_roster(self):
+        print("test_roster.generate_roster")
         roster_df = pd.read_csv(MOCK_ROSTER_FILE)
         recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
         new_roster_df = generate_roster(roster_df, recruiting_df, 'TEXAS TECH')
@@ -52,6 +51,7 @@ class TestRosterScripts(unittest.TestCase):
 
     def test_incoming_recruits(self):
         # test that only incoming recruits from school = school_name are included in the new roster
+        print("test_roster.test_incoming_recruits")
         roster_df = pd.read_csv(MOCK_ROSTER_FILE)
         recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
         school_name = 'TEXAS TECH'
@@ -68,6 +68,3 @@ class TestRosterScripts(unittest.TestCase):
         # Check that no non-committed recruits are in the new roster
         for _, recruit in non_commits.iterrows():
             self.assertFalse(((new_roster_df['FIRST NAME'] == recruit['FIRST NAME']) & (new_roster_df['LAST NAME'] == recruit['LAST NAME'])).any())
-
-if __name__ == '__main__':
-    unittest.main()

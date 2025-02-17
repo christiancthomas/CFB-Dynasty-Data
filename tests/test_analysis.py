@@ -18,6 +18,7 @@ class TestRosterAnalysis(unittest.TestCase):
         pass
 
     def test_calculate_player_value(self):
+        print('test_analysis.calculate_player_value')
         # Define default base values for testing -- useful in case we ever update the values in the functional code
         dev_trait_multipliers = {
             'NORMAL': 1.00,
@@ -28,7 +29,6 @@ class TestRosterAnalysis(unittest.TestCase):
         rs_discount = 0.05
         # roster calculation is ['BASE RATING'] * dev_multiplier * (1 + remaining_dev_years / 4) * (1 - rs_discount) to two decimal places
 
-        print('testing calculate_player_value\n')
         # Add a few players to the roster for testing purposes
         roster_data = self.roster_data.copy()
         roster_data = u.add_player(roster_data, 'WR', 'CHASE', 'THOMAS', 'FR', 80, 82, 'STAR')
