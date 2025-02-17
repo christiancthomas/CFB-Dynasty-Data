@@ -3,7 +3,6 @@ import unittest
 import os
 import pandas as pd
 import shutil
-import roster_analysis
 
 from new_roster import generate_roster
 import utils as u
@@ -69,9 +68,6 @@ class TestRosterScripts(unittest.TestCase):
         # Check that no non-committed recruits are in the new roster
         for _, recruit in non_commits.iterrows():
             self.assertFalse(((new_roster_df['FIRST NAME'] == recruit['FIRST NAME']) & (new_roster_df['LAST NAME'] == recruit['LAST NAME'])).any())
-
-    def test_analyze_roster(self):
-        pass
 
 if __name__ == '__main__':
     unittest.main()

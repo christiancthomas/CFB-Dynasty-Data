@@ -27,30 +27,31 @@ default_position_requirements = {
     'P': {'min': 1, 'ideal': 1}
 }
 
-
+# Define the development trait multipliers
+dev_trait_multipliers = {
+    'NORMAL': 1.00,
+    'IMPACT': 1.10,
+    'STAR': 1.25,
+    'ELITE': 1.50
+    }
+# Define the remaining years of development for different player years
+remaining_years = {
+    'FR': 3,
+    'SO': 2,
+    'JR': 1,
+    'SR': 0,
+    'FR (RS)': 3,  # Redshirt Freshman
+    'SO (RS)': 2,  # Redshirt Sophomore
+    'JR (RS)': 1,  # Redshirt Junior
+    'SR (RS)': 0   # Redshirt Senior
+}
+# Define the redshirt discount
+rs_discount = 0.05
 
 # Define function to calculate player value with corrected multiplier logic
-def calculate_player_value(row):
-    # Define the development trait multipliers
-    dev_trait_multipliers = {
-        'NORMAL': 1.00,
-        'IMPACT': 1.10,
-        'STAR': 1.25,
-        'ELITE': 1.50
-        }
-    # Define the remaining years of development for different player years
-    remaining_years = {
-        'FR': 3,
-        'SO': 2,
-        'JR': 1,
-        'SR': 0,
-        'FR (RS)': 3,  # Redshirt Freshman
-        'SO (RS)': 2,  # Redshirt Sophomore
-        'JR (RS)': 1,  # Redshirt Junior
-        'SR (RS)': 0   # Redshirt Senior
-    }
-    # Define the redshirt discount
-    rs_discount = 0.05
+def calculate_player_value(row, dev_trait_multipliers=dev_trait_multipliers, rs_discount=rs_discount):
+    if "(RS)" not in row['YEAR']:
+        rs_discount = 0
     dev_multiplier = dev_trait_multipliers.get(row['DEV TRAIT'], 1.00)
     remaining_dev_years = remaining_years.get(row['YEAR'], 0)
     value = round(row['BASE RATING'] * dev_multiplier * (1 + remaining_dev_years / 4) * (1 - rs_discount), 2)
@@ -104,7 +105,7 @@ def calculate_position_grade(avg_value):
         return 'F'
 
 # Function to calculate blended measure of starters and backups
-def calculate_blended_measure(df, position, position_requirements=default_position_requirements):
+def calculate_blended_measure(df, position):
     # Define the number of starters for each position
     starters_count = {
         'QB': 1,

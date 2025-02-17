@@ -35,3 +35,23 @@ def create_mock_recruits():
             'STATE': ['CA', 'TX', 'TX']
         }
     return pd.DataFrame(recruiting_data)
+
+def add_player(roster_df, position=None, first_name=None, last_name=None,
+               year=None, rating=None, base_rating=None, dev_trait=None,
+               value=None, status=None, cut=False, redshirt=False, drafted=None):
+    "adds a player to the roster DataFrame"
+    player = pd.DataFrame({
+        'POSITION': [position],
+        'FIRST NAME': [first_name],
+        'LAST NAME': [last_name],
+        'YEAR': [year],
+        'RATING': [rating],
+        'BASE RATING': [base_rating],
+        'DEV TRAIT': [dev_trait],
+        'VALUE': [value],
+        'STATUS': [status],
+        'CUT': [cut],
+        'REDSHIRT': [redshirt],
+        'DRAFTED': [drafted]
+    })
+    return pd.concat([roster_df, player], ignore_index=True)
