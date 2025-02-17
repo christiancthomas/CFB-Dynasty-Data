@@ -2,31 +2,8 @@ import pandas as pd
 import glob
 import os
 
-# Define the development trait multipliers
-dev_trait_multipliers = {
-    'NORMAL': 1.00,
-    'IMPACT': 1.10,
-    'STAR': 1.25,
-    'ELITE': 1.50
-}
-
-# Define the remaining years of development for different player years
-remaining_years = {
-    'FR': 3,
-    'SO': 2,
-    'JR': 1,
-    'SR': 0,
-    'FR (RS)': 3,  # Redshirt Freshman
-    'SO (RS)': 2,  # Redshirt Sophomore
-    'JR (RS)': 1,  # Redshirt Junior
-    'SR (RS)': 0   # Redshirt Senior
-}
-
-# Define the redshirt discount
-rs_discount = 0.05
-
 # Define minimum and ideal roster sizes per position
-position_requirements = {
+default_position_requirements = {
     'QB': {'min': 3, 'ideal': 4},
     'HB': {'min': 4, 'ideal': 6},
     'FB': {'min': 0, 'ideal': 0},
@@ -50,33 +27,30 @@ position_requirements = {
     'P': {'min': 1, 'ideal': 1}
 }
 
-# Define the number of starters for each position
-starters_count = {
-    'QB': 1,
-    'HB': 2,
-    'FB': 1,
-    'WR': 3,
-    'TE': 1,
-    'LT': 1,
-    'LG': 1,
-    'C': 1,
-    'RG': 1,
-    'RT': 1,
-    'LE': 1,
-    'RE': 1,
-    'DT': 2,
-    'LOLB': 1,
-    'MLB': 1,
-    'ROLB': 1,
-    'CB': 2,
-    'FS': 1,
-    'SS': 1,
-    'K': 1,
-    'P': 1
-}
+
 
 # Define function to calculate player value with corrected multiplier logic
 def calculate_player_value(row):
+    # Define the development trait multipliers
+    dev_trait_multipliers = {
+        'NORMAL': 1.00,
+        'IMPACT': 1.10,
+        'STAR': 1.25,
+        'ELITE': 1.50
+        }
+    # Define the remaining years of development for different player years
+    remaining_years = {
+        'FR': 3,
+        'SO': 2,
+        'JR': 1,
+        'SR': 0,
+        'FR (RS)': 3,  # Redshirt Freshman
+        'SO (RS)': 2,  # Redshirt Sophomore
+        'JR (RS)': 1,  # Redshirt Junior
+        'SR (RS)': 0   # Redshirt Senior
+    }
+    # Define the redshirt discount
+    rs_discount = 0.05
     dev_multiplier = dev_trait_multipliers.get(row['DEV TRAIT'], 1.00)
     remaining_dev_years = remaining_years.get(row['YEAR'], 0)
     value = round(row['BASE RATING'] * dev_multiplier * (1 + remaining_dev_years / 4) * (1 - rs_discount), 2)
@@ -130,7 +104,31 @@ def calculate_position_grade(avg_value):
         return 'F'
 
 # Function to calculate blended measure of starters and backups
-def calculate_blended_measure(df, position):
+def calculate_blended_measure(df, position, position_requirements=default_position_requirements):
+    # Define the number of starters for each position
+    starters_count = {
+        'QB': 1,
+        'HB': 2,
+        'FB': 1,
+        'WR': 3,
+        'TE': 1,
+        'LT': 1,
+        'LG': 1,
+        'C': 1,
+        'RG': 1,
+        'RT': 1,
+        'LE': 1,
+        'RE': 1,
+        'DT': 2,
+        'LOLB': 1,
+        'MLB': 1,
+        'ROLB': 1,
+        'CB': 2,
+        'FS': 1,
+        'SS': 1,
+        'K': 1,
+        'P': 1
+    }
     starters_num = starters_count.get(position, 1)
     position_df = df[df['POSITION'] == position].sort_values(by='VALUE', ascending=False)
     starters = position_df.head(starters_num)
@@ -151,7 +149,7 @@ def calculate_blended_measure(df, position):
     return blended_value
 
 # Main function to process the roster and create recruiting plan
-def process_roster_and_create_recruiting_plan(roster_path):
+def process_roster_and_create_recruiting_plan(roster_path, position_requirements=default_position_requirements):
     roster_df = pd.read_csv(roster_path)
 
     # Ensure the required columns are present
