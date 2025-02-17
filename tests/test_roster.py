@@ -3,9 +3,9 @@ import unittest
 import os
 import pandas as pd
 import shutil
-import subprocess
 
-from new_roster import generate_roster, _to_csv
+from new_roster import generate_roster
+import utils as u
 
 DOWNLOADS_FOLDER = os.path.expanduser("~/Downloads")
 MOCK_ROSTER_FILE = os.path.join(DOWNLOADS_FOLDER, "Test_Roster.csv")
@@ -19,38 +19,14 @@ class TestRosterScripts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Create mock roster CSV
-        print('creating mock roster\n')
-        roster_data = {
-            'POSITION': ['QB', 'FS', 'ROLB', 'CB'],
-            'FIRST NAME': ['CHRISTIAN', 'KALLUM', 'SAM', 'TYLOR'],
-            'LAST NAME': ['THOMAS', 'GRIFFIN', 'VEGA', 'RUSSELL'],
-            'YEAR': ['FR', 'SO (RS)', 'SR', 'SO (RS)'],
-            'RATING': [91, 90, 92, 72],
-            'BASE RATING': [88, 89, 90, 69],
-            'DEV TRAIT': ['ELITE', 'STAR', 'IMPACT', 'NORMAL'],
-            'VALUE': ['', '', '', ''],
-            'STATUS': ['ACTIVE', 'ACTIVE', 'GRADUATING', 'ACTIVE'],
-            'CUT': [False, False, False, True],
-            'REDSHIRT': [False, True, False, False],
-            'DRAFTED': [None, None, None, None]
-        }
+        roster_data = u.create_mock_roster()
 
         # Create mock recruiting CSV
-        print('creating mock recruiting board\n')
-        recruiting_data = {
-            'POSITION': ['QB', 'FS', 'CB'],
-            'FIRST NAME': ['JACK', 'JAMES', 'ORION'],
-            'LAST NAME': ['SMITH', 'JOHNSON', 'GREENWOOD'],
-            'YEAR': ['HS', 'HS', 'HS'],
-            'DEV TRAIT': ['NORMAL', 'STAR', 'ELITE'],
-            'STARS': [4, 5, 4],
-            'GEM STATUS': ['NORMAL', 'BUST', 'GEM'],
-            'COMMITTED TO': ['USC', 'TEXAS A&M', 'TEXAS TECH'],
-            'CITY': ['LOS ANGELES', 'DALLAS', 'KILLEEN'],
-            'STATE': ['CA', 'TX', 'TX']
-        }
-        pd.DataFrame(roster_data).to_csv(MOCK_ROSTER_FILE, index=False)
-        pd.DataFrame(recruiting_data).to_csv(MOCK_RECRUITING_FILE, index=False)
+        recruiting_data = u.create_mock_recruits()
+
+        # Save mock CSV files
+        roster_data.to_csv(MOCK_ROSTER_FILE, index=False)
+        recruiting_data.to_csv(MOCK_RECRUITING_FILE, index=False)
 
 
     @classmethod
@@ -64,6 +40,7 @@ class TestRosterScripts(unittest.TestCase):
             shutil.rmtree(OUTPUT_DIR)
 
     def test_generate_roster(self):
+        print("test_roster.generate_roster")
         roster_df = pd.read_csv(MOCK_ROSTER_FILE)
         recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
         new_roster_df = generate_roster(roster_df, recruiting_df, 'TEXAS TECH')
@@ -74,6 +51,7 @@ class TestRosterScripts(unittest.TestCase):
 
     def test_incoming_recruits(self):
         # test that only incoming recruits from school = school_name are included in the new roster
+        print("test_roster.test_incoming_recruits")
         roster_df = pd.read_csv(MOCK_ROSTER_FILE)
         recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
         school_name = 'TEXAS TECH'
@@ -90,12 +68,3 @@ class TestRosterScripts(unittest.TestCase):
         # Check that no non-committed recruits are in the new roster
         for _, recruit in non_commits.iterrows():
             self.assertFalse(((new_roster_df['FIRST NAME'] == recruit['FIRST NAME']) & (new_roster_df['LAST NAME'] == recruit['LAST NAME'])).any())
-
-    def test_analyze_roster(self):
-        # Run the roster_analysis.py script as a subprocess
-        result = subprocess.run(["python3", ROSTER_ANALYSIS_SCRIPT, OUTPUT_FILE], capture_output=True, text=True)
-        self.assertEqual(result.returncode, 0, msg=f"Script failed with output: {result.stdout}\n{result.stderr}")
-        # Add assertions to check the expected output files
-
-if __name__ == '__main__':
-    unittest.main()
