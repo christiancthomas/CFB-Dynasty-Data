@@ -5,7 +5,8 @@ import pandas as pd
 import shutil
 import subprocess
 
-from new_roster import generate_roster, _to_csv
+from new_roster import generate_roster
+import utils as u
 
 DOWNLOADS_FOLDER = os.path.expanduser("~/Downloads")
 MOCK_ROSTER_FILE = os.path.join(DOWNLOADS_FOLDER, "Test_Roster.csv")
@@ -20,37 +21,15 @@ class TestRosterScripts(unittest.TestCase):
     def setUpClass(cls):
         # Create mock roster CSV
         print('creating mock roster\n')
-        roster_data = {
-            'POSITION': ['QB', 'FS', 'ROLB', 'CB'],
-            'FIRST NAME': ['CHRISTIAN', 'KALLUM', 'SAM', 'TYLOR'],
-            'LAST NAME': ['THOMAS', 'GRIFFIN', 'VEGA', 'RUSSELL'],
-            'YEAR': ['FR', 'SO (RS)', 'SR', 'SO (RS)'],
-            'RATING': [91, 90, 92, 72],
-            'BASE RATING': [88, 89, 90, 69],
-            'DEV TRAIT': ['ELITE', 'STAR', 'IMPACT', 'NORMAL'],
-            'VALUE': ['', '', '', ''],
-            'STATUS': ['ACTIVE', 'ACTIVE', 'GRADUATING', 'ACTIVE'],
-            'CUT': [False, False, False, True],
-            'REDSHIRT': [False, True, False, False],
-            'DRAFTED': [None, None, None, None]
-        }
+        roster_data = u.create_mock_roster()
 
         # Create mock recruiting CSV
         print('creating mock recruiting board\n')
-        recruiting_data = {
-            'POSITION': ['QB', 'FS', 'CB'],
-            'FIRST NAME': ['JACK', 'JAMES', 'ORION'],
-            'LAST NAME': ['SMITH', 'JOHNSON', 'GREENWOOD'],
-            'YEAR': ['HS', 'HS', 'HS'],
-            'DEV TRAIT': ['NORMAL', 'STAR', 'ELITE'],
-            'STARS': [4, 5, 4],
-            'GEM STATUS': ['NORMAL', 'BUST', 'GEM'],
-            'COMMITTED TO': ['USC', 'TEXAS A&M', 'TEXAS TECH'],
-            'CITY': ['LOS ANGELES', 'DALLAS', 'KILLEEN'],
-            'STATE': ['CA', 'TX', 'TX']
-        }
-        pd.DataFrame(roster_data).to_csv(MOCK_ROSTER_FILE, index=False)
-        pd.DataFrame(recruiting_data).to_csv(MOCK_RECRUITING_FILE, index=False)
+        recruiting_data = u.create_mock_recruits()
+
+        # Save mock CSV files
+        roster_data.to_csv(MOCK_ROSTER_FILE, index=False)
+        recruiting_data.to_csv(MOCK_RECRUITING_FILE, index=False)
 
 
     @classmethod
