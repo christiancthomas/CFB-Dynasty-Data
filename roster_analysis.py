@@ -4,27 +4,27 @@ import os
 
 # Define minimum and ideal roster sizes per position
 default_position_requirements = {
-    'QB': {'min': 3, 'ideal': 4},
-    'HB': {'min': 4, 'ideal': 6},
-    'FB': {'min': 0, 'ideal': 0},
-    'WR': {'min': 6, 'ideal': 8},
-    'TE': {'min': 3, 'ideal': 4},
-    'LT': {'min': 3, 'ideal': 4},
-    'LG': {'min': 3, 'ideal': 4},
-    'C':  {'min': 3, 'ideal': 4},
-    'RG': {'min': 3, 'ideal': 4},
-    'RT': {'min': 3, 'ideal': 4},
-    'LE': {'min': 3, 'ideal': 4},
-    'RE': {'min': 3, 'ideal': 4},
-    'DT': {'min': 3, 'ideal': 4},
-    'LOLB': {'min': 3, 'ideal': 4},
-    'MLB': {'min': 3, 'ideal': 4},
-    'ROLB': {'min': 3, 'ideal': 4},
-    'CB': {'min': 5, 'ideal': 7},
-    'FS': {'min': 2, 'ideal': 3},
-    'SS': {'min': 2, 'ideal': 3},
-    'K': {'min': 1, 'ideal': 1},
-    'P': {'min': 1, 'ideal': 1}
+    'QB': {'min': 3, 'ideal': 4, 'archetypes': {'FIELD GENERAL': 1, 'IMPROVISER': 0.75, 'SCRAMBLER': 0.25}},
+    'HB': {'min': 4, 'ideal': 6, 'archetypes': {'ELUSIVE BACK': 0.75, 'POWER BACK': 0.75, 'RECEIVING BACK': 0.5}},
+    'FB': {'min': 0, 'ideal': 0, 'archetypes': {'UTILITY': 0, 'BLOCKING': 0}},
+    'WR': {'min': 6, 'ideal': 8, 'archetypes': {'DEEP THREAT': 0.75, 'PHYSICAL': 0.75, 'ROUTE RUNNER': 0.75}},
+    'TE': {'min': 3, 'ideal': 4, 'archetypes': {'VERTICAL THREAT': 1, 'POSSESSION': 0.25, 'BLOCKING': 0.25}},
+    'LT': {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 1, 'AGILE': 0.8, 'POWER': 0.6}},
+    'LG': {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 0.6, 'AGILE': 1, 'POWER': 1}},
+    'C':  {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 0.5, 'AGILE': 1, 'POWER': 1}},
+    'RG': {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 0.6, 'AGILE': 1, 'POWER': 1}},
+    'RT': {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 0.8, 'AGILE': 0.8, 'POWER': 0.75}},
+    'LE': {'min': 3, 'ideal': 4, 'archetypes': {'POWER RUSHER': 0.9, 'SPEED RUSHER': 0.9, 'RUN STOPPER': 1}},
+    'RE': {'min': 3, 'ideal': 4, 'archetypes': {'POWER RUSHER': 0.9, 'SPEED RUSHER': 1, 'RUN STOPPER': 1}},
+    'DT': {'min': 3, 'ideal': 4, 'archetypes': {'POWER RUSHER': 0.9, 'SPEED RUSHER': 0.8, 'RUN STOPPER': 1}},
+    'LOLB': {'min': 3, 'ideal': 4, 'archetypes': {'POWER RUSHER': 1, 'RUN STOPPER': 1, 'PASS COVERAGE': 0.1}},
+    'MLB': {'min': 3, 'ideal': 4, 'archetypes': {'FIELD GENERAL': 1, 'RUN STOPPER': 1, 'PASS COVERAGE': 1}},
+    'ROLB': {'min': 3, 'ideal': 4, 'archetypes': {'POWER RUSHER': 1, 'RUN STOPPER': 1, 'PASS COVERAGE': 0.1}},
+    'CB': {'min': 5, 'ideal': 7, 'archetypes': {'MAN TO MAN': 1, 'ZONE': 0.75, 'SLOT': 0.5}},
+    'FS': {'min': 2, 'ideal': 3, 'archetypes': {'ZONE': 1, 'HYBRID': 0.75, 'RUN SUPPORT': 0.5}},
+    'SS': {'min': 2, 'ideal': 3, 'archetypes': {'ZONE': 0.25, 'HYBRID': 0.75, 'RUN SUPPORT': 0.75}},
+    'K': {'min': 1, 'ideal': 1, 'archetypes': {'ACCURATE': 0.75, 'POWER': 0.75}},
+    'P': {'min': 1, 'ideal': 1, 'archetypes': {'ACCURATE': 0.75, 'POWER': 0.75}}
 }
 
 # Define the development trait multipliers
@@ -149,6 +149,94 @@ def calculate_blended_measure(df, position):
     blended_value = round(0.7 * starters_avg + 0.3 * backups_avg, 2)
     return blended_value
 
+def scheme_fit(roster_df, position_requirements=default_position_requirements):
+    """Determine the scheme fit for each position group for the purposes of recruiting.
+    Position groups whose players have a weak affinity for its preferred archetype should be identified as positions and roles of need
+    in the recruiting plan.
+
+    This function accepts a roster DataFrame and a dictionary of position requirements. The position requirements dictionary should
+    include the minimum and ideal roster sizes per position, as well as the archetypes that are preferred for each position.
+    Archetype preferences are rated on a 0 to 1 scale with 0 being least preferred and 1 being most preferred. 0 should be considered
+    a non-scheme fit for the position. If a non-scheme fit player's archetype is a strong scheme fit for another position, we should
+    note that in the recruiting plan as well as a potential position change during the offseason.
+
+    ## Output
+    The output of this function is two DataFrames
+
+    The first with the following columns:
+    POSITION, FIRST NAME, LAST NAME, YEAR, RATING, BASE RATING, ARCHETYPE, DEV TRAIT, VALUE, STATUS, CUT, REDSHIRT, DRAFTED, SCHEME FIT
+    Where SCHEME FIT is a qualitative recommendation on the player's scheme fit for the position. This column should be used to identify
+    positions and roles of need in the recruiting plan.
+
+    The second DataFrame should have the following columns:
+    POSITION, CURRENT COUNT, MIN REQUIRED, BLENDED VALUE, GRADE, PRIORITY, SCHEME FIT
+    WHERE SCHEME FIT IS A LIST OF RECOMMENDATIONS BASED ON THE POSITION REQUIREMENTS AND PLAYER ARCHETYPES.
+    Example output of SCHEME FIT for ROLB: 'need 1 speed rusher, 1 pass coverage poor scheme fit (consider moving to MLB, FS, or SS)'
+
+    Scheme fit values should not be considered supplementary. That is to say, it's not expected that the sum of scheme fit values should = 1.
+    A value less than 1 is not necessarily a bad scheme fit.
+    ## Scheme Fit Dictionary
+    - 1: A perfect scheme fit. We should always have at least one of these players at this position on the roster to be viable and may want more than one.
+    - 0.5 to 0.99: A good scheme fit. In some circumstances, these players are project players who we're hoping blossom during development. In other situations,
+    these players are essential specialists for situational schemes but won't necessarily be the best fit for every play.
+    - 0.01 to 0.49: Weak scheme fits. We likely wouldn't want to have more than one of these players in the position group at a time and should be
+    considered for position changes during the offseason or cuts. An ideal position change recommendation would be from their current position where the scheme fit
+    is weak to one where it's more preferred or even perfect. For example, pass coverage may be a weak scheme fit for a ROLB but a good fit for MLB. We should
+    note these players and recommended changes in the recruiting plan.
+    - 0: Non-scheme fit. These players are not a good fit for the position and should be considered for offseason cuts.
+
+    ## Special Considerations
+    - LE, RE, and DE: All 3 positions require at least one of ['power rusher' or 'speed rusher'] and at least one 'run stopper' to be a complete unit.
+    Speed rusher is slightly preferred over power rusher at RE due to the importance of the RE in pass rushing situations.
+    - ROLB & LOLB: Both positions require at least one 'power rusher' and one 'run stopper' to be a complete unit. Pass coverage OLBs are immediate candidates for position changes.
+    - MLB: We require at least one of each of the 3 archetypes to be a complete unit.
+    """
+
+    scheme_fit_results = []
+
+    for position, requirements in position_requirements.items():
+        position_df = roster_df[roster_df['POSITION'] == position].copy()
+        current_count = len(position_df)
+        min_required = requirements['min']
+        archetypes = requirements['archetypes']
+
+        # Calculate scheme fit for each player
+        position_df.loc[:, 'SCHEME FIT'] = position_df['ARCHETYPE'].apply(lambda archetype: archetypes.get(archetype, 0))
+
+        # Identify players with weak or non-scheme fits
+        weak_fits = position_df[position_df['SCHEME FIT'] < 0.5]
+        non_fits = position_df[position_df['SCHEME FIT'] == 0]
+
+        # Create scheme fit recommendations
+        recommendations = []
+        for _, player in weak_fits.iterrows():
+            recommended_positions = [pos for pos, reqs in position_requirements.items() if reqs['archetypes'].get(player['ARCHETYPE'], 0) > 0.5]
+            if recommended_positions:
+                recommendations.append(f"{player['FIRST NAME']} {player['LAST NAME']} poor scheme fit (consider moving to {', '.join(recommended_positions)})")
+
+        for _, player in non_fits.iterrows():
+            recommendations.append(f"{player['FIRST NAME']} {player['LAST NAME']} non-scheme fit (consider for cuts)")
+
+        scheme_fit_results.append({
+            'POSITION': position,
+            'CURRENT COUNT': current_count,
+            'MIN REQUIRED': min_required,
+            'BLENDED VALUE': calculate_blended_measure(roster_df, position),
+            'GRADE': calculate_position_grade(calculate_blended_measure(roster_df, position)),
+            'PRIORITY': 'HIGH' if current_count < min_required else 'LOW',
+            'SCHEME FIT': '; '.join(recommendations)
+        })
+        for _, player in position_df.iterrows():
+            print(f"{player['FIRST NAME']} {player['LAST NAME']} ({player['POSITION']} - {player['ARCHETYPE']}): Scheme Fit = {player['SCHEME FIT']}")
+        print(f'recommendations:\n {recommendations}')
+
+    scheme_fit_df = pd.DataFrame(scheme_fit_results)
+
+    print(f'scheme_fit_df:\n {scheme_fit_df}')
+
+        # return roster_df, scheme_fit_df
+
+
 # Main function to process the roster and create recruiting plan
 def process_roster_and_create_recruiting_plan(roster_path, position_requirements=default_position_requirements):
     roster_df = pd.read_csv(roster_path)
@@ -156,13 +244,19 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
     # Ensure the required columns are present
     required_columns = [
         'POSITION', 'FIRST NAME', 'LAST NAME', 'YEAR', 'RATING', 'BASE RATING',
-        'DEV TRAIT', 'VALUE', 'STATUS', 'CUT', 'REDSHIRT', 'DRAFTED'
+        'ARCHETYPE', 'DEV TRAIT', 'VALUE', 'STATUS', 'CUT', 'REDSHIRT', 'DRAFTED'
     ]
     if not all(column in roster_df.columns for column in required_columns):
         raise ValueError("CSV file is missing one or more required columns.")
 
     # Calculate player values
     roster_df['VALUE'] = roster_df.apply(calculate_player_value, axis=1)
+
+    # Pull archetype values through
+    roster_df['ARCHETYPE'] = roster_df['ARCHETYPE'].fillna('')
+
+    # Scheme fit analysis
+    scheme_fit(roster_df, position_requirements)
 
     # Determine the best player at each position
     roster_df['Best at Position'] = roster_df.groupby('POSITION')['RATING'].transform(lambda x: x == x.max())
@@ -183,11 +277,6 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
     position_order = ['QB', 'HB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'LE', 'RE', 'DT', 'LOLB', 'MLB', 'ROLB', 'CB', 'FS', 'SS', 'K', 'P', 'ATH']
     roster_df['POSITION'] = pd.Categorical(roster_df['POSITION'], categories=position_order, ordered=True)
     roster_df.sort_values(by=['POSITION', 'RATING'], ascending=[True, False], inplace=True)
-
-    # Debugging: Print lengths of arrays
-    print(f"Positions: {len(position_requirements.keys())}")
-    print(f"Next Season Counts: {len(next_season_counts)}")
-    print(f"Blended Values: {len(blended_values)}")
 
     # Create the recruiting plan DataFrame
     recruiting_plan = pd.DataFrame({
