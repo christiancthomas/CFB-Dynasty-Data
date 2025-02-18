@@ -192,9 +192,12 @@ def scheme_fit(roster_df, position_requirements=default_position_requirements):
     - MLB: We require at least one of each of the 3 archetypes to be a complete unit.
     """
 
+    #TODO: I'm going to have to come back to this later, it's not correctly collecting the scheme fit recommendations at each position, only the final one.
+
     scheme_fit_results = []
 
     for position, requirements in position_requirements.items():
+        recommendations = []
         position_df = roster_df[roster_df['POSITION'] == position].copy()
         current_count = len(position_df)
         min_required = requirements['min']
@@ -208,7 +211,6 @@ def scheme_fit(roster_df, position_requirements=default_position_requirements):
         non_fits = position_df[position_df['SCHEME FIT'] == 0]
 
         # Create scheme fit recommendations
-        recommendations = []
         for _, player in weak_fits.iterrows():
             recommended_positions = [pos for pos, reqs in position_requirements.items() if reqs['archetypes'].get(player['ARCHETYPE'], 0) > 0.5]
             if recommended_positions:
@@ -226,15 +228,14 @@ def scheme_fit(roster_df, position_requirements=default_position_requirements):
             'PRIORITY': 'HIGH' if current_count < min_required else 'LOW',
             'SCHEME FIT': '; '.join(recommendations)
         })
+
         for _, player in position_df.iterrows():
             print(f"{player['FIRST NAME']} {player['LAST NAME']} ({player['POSITION']} - {player['ARCHETYPE']}): Scheme Fit = {player['SCHEME FIT']}")
         print(f'recommendations:\n {recommendations}')
 
     scheme_fit_df = pd.DataFrame(scheme_fit_results)
-
-    print(f'scheme_fit_df:\n {scheme_fit_df}')
-
-        # return roster_df, scheme_fit_df
+    print(scheme_fit_df)
+    return roster_df, scheme_fit_df
 
 
 # Main function to process the roster and create recruiting plan
