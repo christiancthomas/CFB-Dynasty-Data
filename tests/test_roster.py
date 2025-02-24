@@ -68,3 +68,19 @@ class TestRosterScripts(unittest.TestCase):
         # Check that no non-committed recruits are in the new roster
         for _, recruit in non_commits.iterrows():
             self.assertFalse(((new_roster_df['FIRST NAME'] == recruit['FIRST NAME']) & (new_roster_df['LAST NAME'] == recruit['LAST NAME'])).any())
+
+    def test_archetype(self):
+        # test that the archetype column is correctly populated for returning players and incoming recruits
+        print("test_roster.test_archetype")
+        roster_df = pd.read_csv(MOCK_ROSTER_FILE)
+        recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
+        school_name = 'TEXAS TECH'
+        new_roster_df = generate_roster(roster_df, recruiting_df, school_name)
+
+        # test that orion greenwood is a slot archetype
+        orion = new_roster_df[(new_roster_df['FIRST NAME'] == 'ORION') & (new_roster_df['LAST NAME'] == 'GREENWOOD')]
+        self.assertEqual(orion['ARCHETYPE'].values[0], 'SLOT')
+
+        # test that christian thomas is an improviser archetype
+        christian = new_roster_df[(new_roster_df['FIRST NAME'] == 'CHRISTIAN') & (new_roster_df['LAST NAME'] == 'THOMAS')]
+        self.assertEqual(christian['ARCHETYPE'].values[0], 'IMPROVISER')
