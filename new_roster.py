@@ -40,7 +40,7 @@ def generate_roster(roster_df, recruits_df, school_name=None):
     new_roster_df = pd.concat([filtered_roster_df, recruits_df], ignore_index=True)
 
     # Drop the specified columns
-    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'Unnamed: 8', 'CITY', 'STATE']
+    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'Unnamed: 9', 'CITY', 'STATE']
     new_roster_df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
 
     # Define the position order
@@ -53,7 +53,7 @@ def generate_roster(roster_df, recruits_df, school_name=None):
     new_roster_df.sort_values(by=['POSITION', 'RATING'], ascending=[True, False], inplace=True)
 
     # Ensure the columns exist before setting their values
-    for col in ['RATING', 'BASE RATING', 'VALUE', 'STATUS']:
+    for col in ['RATING', 'BASE RATING', 'ARCHETYPE', 'VALUE', 'STATUS']:
         if col not in new_roster_df.columns:
             new_roster_df[col] = ""
 
