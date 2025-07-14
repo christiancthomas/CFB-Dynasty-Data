@@ -156,8 +156,12 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     logger.info(f"Combined roster size: {final_count} players ({filtered_count} returning + {commit_count} recruits)")
 
     # Drop the specified columns
+<<<<<<< HEAD
+    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'Unnamed: 9', 'CITY', 'STATE']
+=======
     columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'Unnamed: 8', 'CITY', 'STATE']
     columns_dropped = [col for col in columns_to_drop if col in new_roster_df.columns]
+>>>>>>> origin/main
     new_roster_df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
     
     if columns_dropped:
@@ -188,6 +192,12 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     
     new_roster_df.sort_values(by=sort_cols, ascending=sort_ascending, inplace=True)
 
+<<<<<<< HEAD
+    # Ensure the columns exist before setting their values
+    for col in ['RATING', 'BASE RATING', 'ARCHETYPE', 'VALUE', 'STATUS']:
+        if col not in new_roster_df.columns:
+            new_roster_df[col] = ""
+=======
     # Helper function to ensure columns exist and set default values
     def ensure_columns_exist(df, column_defaults):
         for col, default_val in column_defaults.items():
@@ -210,6 +220,7 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
         'REDSHIRT': False,
         'CUT': False
     })
+>>>>>>> origin/main
 
     logger.info(f"Roster generation completed successfully. Final roster: {len(new_roster_df)} players")
     
