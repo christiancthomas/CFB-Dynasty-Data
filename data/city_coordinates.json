@@ -1,0 +1,308 @@
+{
+  "Texas": {
+    "ALLEN": {
+      "latitude": 33.1031744,
+      "longitude": -96.6705503
+    },
+    "CARROLLTON": {
+      "latitude": 32.9515472,
+      "longitude": -96.9034244
+    },
+    "CEDAR HILL": {
+      "latitude": 32.5888072,
+      "longitude": -96.9553675
+    },
+    "CIBOLO": {
+      "latitude": 29.5707831,
+      "longitude": -98.2330927
+    },
+    "COLLEYVILLE": {
+      "latitude": 32.8809603,
+      "longitude": -97.155012
+    },
+    "CYPRESS": {
+      "latitude": 29.9691116,
+      "longitude": -95.6971686
+    },
+    "DENTON": {
+      "latitude": 33.1838787,
+      "longitude": -97.1413417
+    },
+    "DICKINSON": {
+      "latitude": 29.4607876,
+      "longitude": -95.0513173
+    },
+    "FORT WORTH": {
+      "latitude": 32.753177,
+      "longitude": -97.3327459
+    },
+    "FRESNO": {
+      "latitude": 29.5388465,
+      "longitude": -95.4474414
+    },
+    "FRISCO": {
+      "latitude": 33.1505998,
+      "longitude": -96.8238183
+    },
+    "GEORGETOWN": {
+      "latitude": 30.6370152,
+      "longitude": -97.6775634
+    },
+    "HOUSTON": {
+      "latitude": 29.7589382,
+      "longitude": -95.3676974
+    },
+    "HUFFMAN": {
+      "latitude": 30.0271626,
+      "longitude": -95.0857627
+    },
+    "KATY": {
+      "latitude": 29.7857853,
+      "longitude": -95.8243956
+    },
+    "KEMPNER": {
+      "latitude": 31.081007,
+      "longitude": -98.0025249
+    },
+    "LEWISVILLE": {
+      "latitude": 33.046233,
+      "longitude": -96.994174
+    },
+    "MANSFIELD": {
+      "latitude": 32.563487,
+      "longitude": -97.1420308
+    },
+    "MANVEL": {
+      "latitude": 29.4664706,
+      "longitude": -95.355714
+    },
+    "MCKINNEY": {
+      "latitude": 33.1976496,
+      "longitude": -96.6154471
+    },
+    "MISSOURI CITY": {
+      "latitude": 29.6185669,
+      "longitude": -95.5377215
+    },
+    "MONTGOMERY": {
+      "latitude": 30.301949,
+      "longitude": -95.5065944
+    },
+    "NEEDVILLE": {
+      "latitude": 29.3974305,
+      "longitude": -95.8380978
+    },
+    "PFLUGERVILLE": {
+      "latitude": 30.4393696,
+      "longitude": -97.6200043
+    },
+    "PLANO": {
+      "latitude": 33.0136764,
+      "longitude": -96.6925096
+    },
+    "ROUND ROCK": {
+      "latitude": 30.5085915,
+      "longitude": -97.6788056
+    },
+    "SCHERTZ": {
+      "latitude": 29.5641617,
+      "longitude": -98.2695702
+    },
+    "SILSBEE": {
+      "latitude": 30.3490978,
+      "longitude": -94.1779626
+    },
+    "SPRING": {
+      "latitude": 30.0795707,
+      "longitude": -95.4187924
+    },
+    "STAFFORD": {
+      "latitude": 29.6160671,
+      "longitude": -95.5577221
+    },
+    "TROPHY CLUB": {
+      "latitude": 33.0046775,
+      "longitude": -97.2055989
+    },
+    "VAN": {
+      "latitude": 32.5249071,
+      "longitude": -95.63773
+    }
+  },
+  "Utah": {
+    "ALPINE": {
+      "latitude": 40.453253,
+      "longitude": -111.7779596
+    }
+  },
+  "Georgia": {
+    "ATLANTA": {
+      "latitude": 33.7544657,
+      "longitude": -84.3898151
+    },
+    "MARIETTA": {
+      "latitude": 33.9528472,
+      "longitude": -84.5496148
+    }
+  },
+  "Alabama": {
+    "AUBURN": {
+      "latitude": 32.6098566,
+      "longitude": -85.4807825
+    },
+    "DEMOPOLIS": {
+      "latitude": 32.5178284,
+      "longitude": -87.8368201
+    },
+    "HOOVER": {
+      "latitude": 33.350293,
+      "longitude": -86.851123
+    }
+  },
+  "California": {
+    "BAKERSFIELD": {
+      "latitude": 35.3738712,
+      "longitude": -119.019463
+    },
+    "FOLSOM": {
+      "latitude": 38.6779591,
+      "longitude": -121.176058
+    },
+    "FOUNTAIN VALLEY": {
+      "latitude": 33.7038145,
+      "longitude": -117.9627349
+    },
+    "INGLEWOOD": {
+      "latitude": 33.9562003,
+      "longitude": -118.353132
+    },
+    "LA MIRADA": {
+      "latitude": 33.9060971,
+      "longitude": -118.0107092
+    },
+    "PASADENA": {
+      "latitude": 34.1476507,
+      "longitude": -118.144155
+    },
+    "PETALUMA": {
+      "latitude": 38.2325829,
+      "longitude": -122.636465
+    },
+    "ROCKLIN": {
+      "latitude": 38.7907339,
+      "longitude": -121.2357828
+    },
+    "WATSONVILLE": {
+      "latitude": 36.9092773,
+      "longitude": -121.7529071
+    }
+  },
+  "Louisiana": {
+    "BENTON": {
+      "latitude": 32.6948677,
+      "longitude": -93.7418454
+    },
+    "SHREVEPORT": {
+      "latitude": 32.5135356,
+      "longitude": -93.7477839
+    },
+    "SLIDELL": {
+      "latitude": 30.2751945,
+      "longitude": -89.7811745
+    },
+    "SULPHUR": {
+      "latitude": 30.2365943,
+      "longitude": -93.3773783
+    }
+  },
+  "Mississippi": {
+    "BILOXI": {
+      "latitude": 30.4007626,
+      "longitude": -88.8893818
+    },
+    "RIDGELAND": {
+      "latitude": 32.4284761,
+      "longitude": -90.1323087
+    },
+    "SARDIS": {
+      "latitude": 34.4370511,
+      "longitude": -89.9159227
+    }
+  },
+  "Tennessee": {
+    "COLLIERVILLE": {
+      "latitude": 35.042036,
+      "longitude": -89.6645266
+    },
+    "GERMANTOWN": {
+      "latitude": 35.0867577,
+      "longitude": -89.8100858
+    }
+  },
+  "Colorado": {
+    "COLORADO SPRINGS": {
+      "latitude": 38.8339578,
+      "longitude": -104.825348
+    }
+  },
+  "Maryland": {
+    "ELLICOTT": {
+      "latitude": 39.2757359,
+      "longitude": -76.8317417
+    }
+  },
+  "Florida": {
+    "FORT LAUDERDALE": {
+      "latitude": 26.1223084,
+      "longitude": -80.1433786
+    },
+    "PACE": {
+      "latitude": 30.5964175,
+      "longitude": -87.1662647
+    }
+  },
+  "Illinois": {
+    "JOLIET": {
+      "latitude": 41.5263603,
+      "longitude": -88.0840212
+    }
+  },
+  "New Jersey": {
+    "MIDDLESEX": {
+      "latitude": 40.4279708,
+      "longitude": -74.3963102
+    },
+    "PATERSON": {
+      "latitude": 40.9167654,
+      "longitude": -74.171811
+    },
+    "PRINCETON": {
+      "latitude": 40.3496953,
+      "longitude": -74.6597376
+    }
+  },
+  "South Dakota": {
+    "SIOUX FALLS": {
+      "latitude": 43.5476008,
+      "longitude": -96.7293629
+    }
+  },
+  "Pennsylvania": {
+    "SPRINGFIELD": {
+      "latitude": 39.9306677,
+      "longitude": -75.3201879
+    }
+  },
+  "Ohio": {
+    "WARREN": {
+      "latitude": 39.4203978,
+      "longitude": -84.180897
+    }
+  },
+  "Delaware": {
+    "WASHINGTON": {
+      "latitude": 38.8950368,
+      "longitude": -77.0365427
+    }
+  }
+}

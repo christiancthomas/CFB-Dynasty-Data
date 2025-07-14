@@ -1,31 +1,37 @@
 """
 Geocoding utilities for city coordinate lookup.
 
-This module provides enhanced geocoding functionality with retry logic
-and timeout handling for reliable city coordinate lookup.
+This module provides enhanced geocoding functionality with retry logic,
+timeout handling, and simple JSON-based coordinate storage.
 """
 
 import time
+from typing import Optional, Tuple
+from .simple_cache import get_city_coordinates_from_json, store_city_coordinates_to_json, get_coordinates_stats, clear_coordinates
 
 
-def get_city_coordinates(city, state, cache={}, timeout=10, max_retries=2):
+def get_city_coordinates(city: str, state: str, cache_legacy=None, timeout: int = 10, max_retries: int = 2) -> Optional[Tuple[float, float]]:
     """
-    Get coordinates for a city using geopy with improved timeout handling.
+    Get coordinates for a city using JSON file lookup first, then geopy if needed.
 
     Args:
         city (str): City name
-        state (str): State abbreviation (e.g., 'TX', 'CA')
-        cache (dict): Cache dictionary for storing results (persistent across calls)
+        state (str): State abbreviation (e.g., 'TX', 'CA') or full name
+        cache_legacy: Deprecated legacy cache parameter (ignored)
         timeout (int): Timeout in seconds for geocoding requests
         max_retries (int): Maximum number of retry attempts
 
     Returns:
         tuple: (latitude, longitude) if successful, None if failed
     """
-    key = f"{city}, {state}"
+    # First, check the JSON file for cached coordinates
+    cached_coords = get_city_coordinates_from_json(city, state)
+    if cached_coords is not None:
+        print(f"📦 Using saved coordinates for {city}, {state}")
+        return cached_coords
 
-    if key in cache:
-        return cache[key]
+    # If not in JSON file, make API call to geopy
+    print(f"🌐 Geocoding {city}, {state} via API...")
 
     for attempt in range(max_retries + 1):
         try:
@@ -48,7 +54,10 @@ def get_city_coordinates(city, state, cache={}, timeout=10, max_retries=2):
 
             if location:
                 coords = (location.latitude, location.longitude)
-                cache[key] = coords
+
+                # Store in JSON file for future use
+                store_city_coordinates_to_json(city, state, coords[0], coords[1])
+
                 if attempt > 0:
                     print(f"✅ Successfully geocoded {city}, {state} on retry {attempt}")
                 return coords
@@ -68,5 +77,24 @@ def get_city_coordinates(city, state, cache={}, timeout=10, max_retries=2):
                 print(f"⚠️  Could not geocode {city}, {state}: {e}")
                 break
 
-    cache[key] = None
     return None
+
+
+def clear_coordinate_cache() -> bool:
+    """
+    Clear all cached coordinates.
+
+    Returns:
+        bool: True if successfully cleared, False otherwise
+    """
+    return clear_coordinates()
+
+
+def get_cache_statistics() -> dict:
+    """
+    Get statistics about the coordinate cache.
+
+    Returns:
+        dict: Cache statistics including total cities and states
+    """
+    return get_coordinates_stats()
