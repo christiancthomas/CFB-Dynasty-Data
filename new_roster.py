@@ -156,12 +156,8 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     logger.info(f"Combined roster size: {final_count} players ({filtered_count} returning + {commit_count} recruits)")
 
     # Drop the specified columns
-<<<<<<< HEAD
-    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'Unnamed: 9', 'CITY', 'STATE']
-=======
-    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'Unnamed: 8', 'CITY', 'STATE']
+    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'CITY', 'STATE', 'NATIONAL RANKING']
     columns_dropped = [col for col in columns_to_drop if col in new_roster_df.columns]
->>>>>>> origin/main
     new_roster_df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
 
     if columns_dropped:
@@ -170,7 +166,7 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     # Define the position order
     position_order = [
         'QB', 'HB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT',
-        'LE', 'RE', 'DT', 'LOLB', 'MLB', 'ROLB', 'CB', 'FS', 'SS', 'K', 'P', 'ATH'
+        'LEDG', 'REDG', 'DT', 'WILL', 'MIKE', 'SAM', 'CB', 'FS', 'SS', 'K', 'P', 'ATH'
     ]
 
     # Create a categorical type for the position column based on the defined order
