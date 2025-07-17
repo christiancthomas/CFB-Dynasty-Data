@@ -1,6 +1,6 @@
-from ..config.constants import REMAINING_YEARS, RS_DISCOUNT
+from ..config.constants import REMAINING_YEARS, RS_DISCOUNT, DEV_TRAIT_MULTIPLIERS
 
-def calculate_player_value(row, dev_trait_multipliers):
+def calculate_player_value(row, dev_trait_multipliers=DEV_TRAIT_MULTIPLIERS):
     """Calculate player value based on base overall, development trait, and remaining years."""
     remaining_dev_years = REMAINING_YEARS.get(row['YEAR'], 0)
 
