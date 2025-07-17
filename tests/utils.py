@@ -6,17 +6,19 @@ def create_mock_roster():
     "returns a pandas DataFrame of mock roster data"
     roster_data = {
             'POSITION': ['QB', 'FS', 'ROLB', 'CB'],
-            'FIRST NAME': ['CHRISTIAN', 'KALLUM', 'SAM', 'TYLOR'],
-            'LAST NAME': ['THOMAS', 'GRIFFIN', 'VEGA', 'RUSSELL'],
-            'YEAR': ['FR', 'SO (RS)', 'SR', 'SO (RS)'],
-            'RATING': [91, 90, 92, 72],
-            'BASE RATING': [88, 89, 90, 69],
-            'ARCHETYPE': ['IMPROVISER', 'HYBRID', 'POWER RUSHER', 'MAN TO MAN'],
+            'FIRST NAME': ['CHRISTIAN', 'KALLUM', 'SAM', 'CHASE'],
+            'LAST NAME': ['THOMAS', 'GRIFFIN', 'VEGA', 'THOMAS'],
+            'YEAR': ['JR', 'SO (RS)', 'SR', 'FR'],
+            'OVERALL': [91, 90, 92, 75],
+            'BASE OVERALL': [88, 89, 90, 72],
+            'CITY': ['ROUND ROCK', 'DALLAS', 'COPPERAS COVE', 'SAN ANTONIO'],
+            'STATE': ['TX', 'TX', 'TX', 'TX'],
+            'ARCHETYPE': ['DUAL THREAT', 'HYBRID', 'POWER RUSHER', 'BUMP AND RUN'],
             'DEV TRAIT': ['ELITE', 'STAR', 'IMPACT', 'NORMAL'],
             'VALUE': ['', '', '', ''],
             'STATUS': ['ACTIVE', 'ACTIVE', 'GRADUATING', 'ACTIVE'],
             'CUT': [False, False, False, True],
-            'REDSHIRT': [False, True, False, False],
+            'REDSHIRT': [False, False, False, True],
             'DRAFTED': [None, None, None, None]
         }
     return pd.DataFrame(roster_data)
@@ -39,7 +41,7 @@ def create_mock_recruits():
     return pd.DataFrame(recruiting_data)
 
 def add_player(roster_df, position=None, first_name=None, last_name=None,
-               year=None, rating=None, base_rating=None, dev_trait=None,
+               year=None, overall=None, base_overall=None, dev_trait=None,
                value=None, status=None, cut=False, redshirt=False, drafted=None):
     "adds a player to the roster DataFrame"
     player = pd.DataFrame({
@@ -47,8 +49,8 @@ def add_player(roster_df, position=None, first_name=None, last_name=None,
         'FIRST NAME': [first_name],
         'LAST NAME': [last_name],
         'YEAR': [year],
-        'RATING': [rating],
-        'BASE RATING': [base_rating],
+        'OVERALL': [overall],
+        'BASE OVERALL': [base_overall],
         'DEV TRAIT': [dev_trait],
         'VALUE': [value],
         'STATUS': [status],
