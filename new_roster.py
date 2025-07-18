@@ -165,7 +165,7 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
 
     # Define the position order
     position_order = [
-        'QB', 'HB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT',
+        'QB', 'HB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT',
         'LEDG', 'REDG', 'DT', 'WILL', 'MIKE', 'SAM', 'CB', 'FS', 'SS', 'K', 'P', 'ATH'
     ]
 
@@ -179,12 +179,12 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     sort_cols = ['POSITION']
     sort_ascending = [True]
 
-    if 'RATING' in new_roster_df.columns and not new_roster_df['RATING'].isna().all():
-        sort_cols.append('RATING')
+    if 'OVERALL' in new_roster_df.columns and not new_roster_df['OVERALL'].isna().all():
+        sort_cols.append('OVERALL')
         sort_ascending.append(False)
-        logger.debug("Sorting by position and rating")
+        logger.debug("Sorting by position and overall rating")
     else:
-        logger.debug("Sorting by position only (no rating data available)")
+        logger.debug("Sorting by position only (no overall rating data available)")
 
     new_roster_df.sort_values(by=sort_cols, ascending=sort_ascending, inplace=True)
 
