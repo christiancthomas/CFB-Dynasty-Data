@@ -93,7 +93,7 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
         raise ValueError("Recruits DataFrame cannot be empty")
 
     required_roster_cols = ['YEAR', 'REDSHIRT', 'CUT', 'DRAFTED']
-    required_recruit_cols = ['COMMITTED TO', 'YEAR']
+    required_recruit_cols = ['FIRST NAME', 'LAST NAME', 'POSITION','COMMITTED TO', 'YEAR']
 
     for col in required_roster_cols:
         if col not in roster_df.columns:
@@ -156,7 +156,7 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     logger.info(f"Combined roster size: {final_count} players ({filtered_count} returning + {commit_count} recruits)")
 
     # Drop the specified columns
-    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'CITY', 'STATE', 'NATIONAL RANKING']
+    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'NATIONAL RANKING']
     columns_dropped = [col for col in columns_to_drop if col in new_roster_df.columns]
     new_roster_df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
 
@@ -179,8 +179,8 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     sort_cols = ['POSITION']
     sort_ascending = [True]
 
-    if 'RATING' in new_roster_df.columns and not new_roster_df['RATING'].isna().all():
-        sort_cols.append('RATING')
+    if 'OVERALL' in new_roster_df.columns and not new_roster_df['OVERALL'].isna().all():
+        sort_cols.append('OVERALL')
         sort_ascending.append(False)
         logger.debug("Sorting by position and rating")
     else:
@@ -197,10 +197,10 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
             df[col] = default_val
 
     # Set columns to default values
-    logger.debug("Resetting rating and status columns to default values")
+    logger.debug("Resetting overall and status columns to default values")
     ensure_columns_exist(new_roster_df, {
-        'RATING': "",
-        'BASE RATING': "",
+        'OVERALL': "",
+        'BASE OVERALL': "",
         'VALUE': "",
         'STATUS': ""
     })
