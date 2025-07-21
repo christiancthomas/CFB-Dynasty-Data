@@ -1,34 +1,12 @@
+import logging
 import pandas as pd
 import os
 import glob
-import logging
 from typing import Optional
-
-# Configure logging
-def setup_logging(log_level=logging.INFO, log_file=None):
-    """
-    Set up logging configuration.
-
-    Args:
-        log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-        log_file: Optional file path to write logs to
-    """
-    log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-
-    handlers = [logging.StreamHandler()]  # Console output
-    if log_file:
-        handlers.append(logging.FileHandler(log_file))
-
-    logging.basicConfig(
-        level=log_level,
-        format=log_format,
-        handlers=handlers,
-        force=True  # Override any existing configuration
-    )
+from utils.log import setup_logging, get_logger
 
 # Create logger for this module
-logger = logging.getLogger(__name__)
-
+logger = get_logger(__name__)
 
 def advance_year(year: str, redshirt: bool) -> str:
     """
