@@ -91,9 +91,11 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
 
     # Apply the function to advance the year for each player
     logger.info("Advancing years for current roster players")
-    roster_copy['YEAR'] = roster_copy.apply(
-        lambda row: Player.advance_year(row['YEAR'], row['REDSHIRT']), axis=1
-    )
+    def advance_player_year(row):
+        player = Player(**row.to_dict())
+        return player.advance_year()
+    
+    roster_copy['YEAR'] = roster_copy.apply(advance_player_year, axis=1)
 
     # Filter the roster data to include only players who are not graduating or drafted or cut
     initial_count = len(roster_copy)
@@ -122,9 +124,18 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
 
     # Advance the year for recruits from HS to FR
     logger.debug("Advancing years for incoming recruits")
-    recruits_filtered.loc[:, 'YEAR'] = recruits_filtered['YEAR'].apply(
-        lambda year: advance_year(year, False)
-    )
+    def advance_recruit_year(year):
+        # For recruits, we only need to handle HS -> FR transition
+        year_mapping = {
+            'HS': 'FR',
+            'FR': 'SO',
+            'SO': 'JR', 
+            'JR': 'SR',
+            'SR': 'GRADUATED'
+        }
+        return year_mapping.get(year, year)
+    
+    recruits_filtered.loc[:, 'YEAR'] = recruits_filtered['YEAR'].apply(advance_recruit_year)
 
     # Combine the filtered roster data with the recruits
     logger.info("Combining roster with incoming recruits")
