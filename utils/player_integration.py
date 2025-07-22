@@ -1,6 +1,6 @@
 from typing import List
 import pandas as pd
-from models import Player
+from models.Player import Player
 
 def create_hybrid_roster(csv_path: str):
     """Load CSV into both DataFrame and Player objects"""

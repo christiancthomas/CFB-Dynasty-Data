@@ -64,8 +64,8 @@ class TestPlayer(unittest.TestCase):
         player = Player(**self.sample_player_data)
         
         # Generate expected ID
-        expected_id = md5(f"JohnSmithQBAtlantaGA".encode()).hexdigest()
-        self.assertEqual(player.id, expected_id)
+        expected_id = md5(f"{player.first_name}{player.last_name}{player.position}{player.city}{player.state}".lower().replace(" ", "").encode()).hexdigest()
+        self.assertEqual(player.player_id, expected_id)
 
     def test_player_id_uniqueness(self):
         """Test that different players have different IDs."""
@@ -75,8 +75,8 @@ class TestPlayer(unittest.TestCase):
         different_data = self.sample_player_data.copy()
         different_data['first_name'] = 'Mike'
         player2 = Player(**different_data)
-        
-        self.assertNotEqual(player1.id, player2.id)
+
+        self.assertNotEqual(player1.player_id, player2.player_id)
 
     def test_player_str_representation(self):
         """Test the string representation of a player."""
@@ -235,7 +235,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(original_player.redshirt, reconstructed_player.redshirt)
         
         # IDs should be the same since they're based on the same data
-        self.assertEqual(original_player.id, reconstructed_player.id)
+        self.assertEqual(original_player.player_id, reconstructed_player.player_id)
 
     def test_edge_cases_empty_strings(self):
         """Test handling of empty string values."""
@@ -260,8 +260,8 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(player.city, "San José")
         
         # ID should still be generated properly
-        self.assertIsNotNone(player.id)
-        self.assertIsInstance(player.id, str)
+        self.assertIsNotNone(player.player_id)
+        self.assertIsInstance(player.player_id, str)
 
 
 if __name__ == '__main__':

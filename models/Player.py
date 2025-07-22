@@ -8,7 +8,6 @@ class Player:
     def __init__(self, first_name: str, last_name: str, position: str, year: str, overall: str, base_overall: str,
                  city: str, state: str, archetype: str, dev_trait: str, cut: bool, drafted: str, redshirt: bool,
                  value: float, status: str, team: str, national_rank: str, stars: str, gem_status: str, committed_to: str):
-        self.id = md5(f"{first_name}{last_name}{position}{city}{state}".encode()).hexdigest()
         self.first_name = first_name
         self.last_name = last_name
         self.position = position
@@ -30,6 +29,10 @@ class Player:
         self.gem_status = gem_status
         self.committed_to = committed_to
 
+        # Generate a unique ID based on player attributes, ignoring case and spaces
+        id_vars = f"{first_name}{last_name}{position}{city}{state}".lower().replace(" ", "")
+        self.player_id = md5(id_vars.encode()).hexdigest()
+
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.position} ({self.year})"
     
@@ -41,7 +44,7 @@ class Player:
             dict: Dictionary containing player attributes.
         """
         return {
-            'id': self.id,
+            'id': self.player_id,
             'first_name': self.first_name,
             'last_name': self.last_name,
             'team': self.team,
