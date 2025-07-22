@@ -4,47 +4,47 @@ import os
 import glob
 from typing import Optional
 from utils.log import setup_logging, get_logger
+from models.Player import Player
 
 # Create logger for this module
 logger = get_logger(__name__)
 
-def advance_year(year: str, redshirt: bool) -> str:
-    """
-    Advance a player's year and handle redshirt status.
+# def advance_year(year: str, redshirt: bool) -> str:
+#     """
+#     Advance a player's year and handle redshirt status.
 
-    Args:
-        year (str): Current year (e.g., 'FR', 'SO', 'HS')
-        redshirt (bool): Whether the player is being redshirted
+#     Args:
+#         year (str): Current year (e.g., 'FR', 'SO', 'HS')
+#         redshirt (bool): Whether the player is being redshirted
 
-    Returns:
-        str: Advanced year with redshirt notation if applicable
-    """
-    logger.debug(f"Advancing year for player: year={year}, redshirt={redshirt}")
+#     Returns:
+#         str: Advanced year with redshirt notation if applicable
+#     """
 
-    year_mapping = {
-        'HS': 'FR',
-        'FR': 'SO',
-        'SO': 'JR',
-        'JR': 'SR',
-        'SR': 'GRADUATED',
-        'FR (RS)': 'SO (RS)',
-        'SO (RS)': 'JR (RS)',
-        'JR (RS)': 'SR (RS)',
-        'SR (RS)': 'GRADUATED'
-    }
+#     year_mapping = {
+#         'HS': 'FR',
+#         'FR': 'SO',
+#         'SO': 'JR',
+#         'JR': 'SR',
+#         'SR': 'GRADUATED',
+#         'FR (RS)': 'SO (RS)',
+#         'SO (RS)': 'JR (RS)',
+#         'JR (RS)': 'SR (RS)',
+#         'SR (RS)': 'GRADUATED'
+#     }
 
-    if redshirt and 'RS' not in year:
-        # Add redshirt designation without advancing year
-        new_year = f"{year} (RS)"
-        logger.debug(f"Applied redshirt: {year} -> {new_year}")
-        return new_year
+#     if redshirt and 'RS' not in year:
+#         # Add redshirt designation without advancing year
+#         new_year = f"{year} (RS)"
+#         logger.debug(f"Applied redshirt: {year} -> {new_year}")
+#         return new_year
 
-    # Advance the year normally
-    new_year = year_mapping.get(year, year)
-    if new_year != year:
-        logger.debug(f"Advanced year: {year} -> {new_year}")
+#     # Advance the year normally
+#     new_year = year_mapping.get(year, year)
+#     if new_year != year:
+#         logger.debug(f"Advanced year: {year} -> {new_year}")
 
-    return new_year
+#     return new_year
 
 def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_name: Optional[str] = None) -> pd.DataFrame:
     """
@@ -92,7 +92,7 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     # Apply the function to advance the year for each player
     logger.info("Advancing years for current roster players")
     roster_copy['YEAR'] = roster_copy.apply(
-        lambda row: advance_year(row['YEAR'], row['REDSHIRT']), axis=1
+        lambda row: Player.advance_year(row['YEAR'], row['REDSHIRT']), axis=1
     )
 
     # Filter the roster data to include only players who are not graduating or drafted or cut
