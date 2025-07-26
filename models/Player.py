@@ -7,7 +7,8 @@ class Player:
     """
     def __init__(self, first_name: str, last_name: str, position: str, year: str, overall: str, base_overall: str,
                  city: str, state: str, archetype: str, dev_trait: str, cut: bool, drafted: str, redshirt: bool,
-                 value: float, status: str, team: str, national_rank: str, stars: str, gem_status: str, committed_to: str):
+                 value: float, status: str, team: str, national_rank: str, stars: str, gem_status: str, committed_to: str,
+                 transfer: bool = False, transferred: bool = False):
         self.first_name = first_name
         self.last_name = last_name
         self.position = position
@@ -28,6 +29,8 @@ class Player:
         self.stars = stars
         self.gem_status = gem_status
         self.committed_to = committed_to
+        self.transfer = transfer
+        self.transferred = transferred
 
         # Generate a unique ID based on player attributes, ignoring case and spaces
         id_vars = f"{first_name}{last_name}{position}{city}{state}".lower().replace(" ", "")
@@ -35,11 +38,11 @@ class Player:
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.position} ({self.year})"
-    
+
     def to_dict(self) -> dict:
         """
         Convert the player object to a dictionary representation.
-        
+
         Returns:
             dict: Dictionary containing player attributes.
         """
@@ -64,17 +67,19 @@ class Player:
             'national_rank': self.national_rank,
             'stars': self.stars,
             'gem_status': self.gem_status,
-            'committed_to': self.committed_to
+            'committed_to': self.committed_to,
+            'transfer': self.transfer,
+            'transferred': self.transferred,
         }
-    
+
     @classmethod
     def from_dict(cls, player_data: dict):
         """
         Create a Player instance from a dictionary representation.
-        
+
         Args:
             player_data (dict): Dictionary containing player attributes.
-        
+
         Returns:
             Player: An instance of the Player class.
         """
@@ -99,12 +104,14 @@ class Player:
             stars=player_data.get('stars', ''),
             gem_status=player_data.get('gem_status', ''),
             committed_to=player_data.get('committed_to', ''),
+            transfer=player_data.get('transfer', False),
+            transferred=player_data.get('transferred', False),
             )
-    
+
     def advance_year(self):
         """
         Advance the player's year based on their current year and redshirt status.
-        
+
         If the player is redshirted, they will advance to the next year without changing their status.
         """
         year_mapping = {
@@ -118,10 +125,10 @@ class Player:
             'JR (RS)': 'SR (RS)',
             'SR (RS)': 'GRADUATED'
             }
-        
+
         if self.redshirt and 'RS' not in self.year:
             self.year += " (RS)"
         else:
             self.year = year_mapping.get(self.year, self.year)
-        
+
         return self.year
