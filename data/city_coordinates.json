@@ -127,6 +127,38 @@
     "VAN": {
       "latitude": 32.5249071,
       "longitude": -95.63773
+    },
+    "ARLINGTON": {
+      "latitude": 32.7355816,
+      "longitude": -97.1071186
+    },
+    "DALLAS": {
+      "latitude": 32.7762719,
+      "longitude": -96.7968559
+    },
+    "FLOWER MOUND": {
+      "latitude": 33.0283854,
+      "longitude": -97.0867203
+    },
+    "GRAND PRARIE": {
+      "latitude": 29.9376625,
+      "longitude": -95.2818111
+    },
+    "HUMBLE": {
+      "latitude": 29.9988312,
+      "longitude": -95.2621553
+    },
+    "JASPER": {
+      "latitude": 30.7485258,
+      "longitude": -94.000884
+    },
+    "LEAGUE CITY": {
+      "latitude": 29.5074538,
+      "longitude": -95.0949303
+    },
+    "SOUTHLAKE": {
+      "latitude": 32.9412363,
+      "longitude": -97.1341783
     }
   },
   "Utah": {
@@ -143,6 +175,10 @@
     "MARIETTA": {
       "latitude": 33.9528472,
       "longitude": -84.5496148
+    },
+    "LEESBURG": {
+      "latitude": 31.7324556,
+      "longitude": -84.1711966
     }
   },
   "Alabama": {
@@ -157,6 +193,10 @@
     "HOOVER": {
       "latitude": 33.350293,
       "longitude": -86.851123
+    },
+    "ROANOKE": {
+      "latitude": 33.1522422,
+      "longitude": -85.3748173
     }
   },
   "California": {
@@ -213,6 +253,10 @@
     "SULPHUR": {
       "latitude": 30.2365943,
       "longitude": -93.3773783
+    },
+    "MONROE": {
+      "latitude": 32.5025471,
+      "longitude": -92.116219
     }
   },
   "Mississippi": {
@@ -227,6 +271,10 @@
     "SARDIS": {
       "latitude": 34.4370511,
       "longitude": -89.9159227
+    },
+    "PICAYUNE": {
+      "latitude": 30.5254692,
+      "longitude": -89.6795084
     }
   },
   "Tennessee": {
@@ -237,6 +285,10 @@
     "GERMANTOWN": {
       "latitude": 35.0867577,
       "longitude": -89.8100858
+    },
+    "GREENEVILLE": {
+      "latitude": 36.1631575,
+      "longitude": -82.8309861
     }
   },
   "Colorado": {
@@ -259,6 +311,14 @@
     "PACE": {
       "latitude": 30.5964175,
       "longitude": -87.1662647
+    },
+    "HOLLYWOOD": {
+      "latitude": 26.0112014,
+      "longitude": -80.1494901
+    },
+    "PORT SAINT LUCIE": {
+      "latitude": 27.2939333,
+      "longitude": -80.3503283
     }
   },
   "Illinois": {
@@ -279,6 +339,10 @@
     "PRINCETON": {
       "latitude": 40.3496953,
       "longitude": -74.6597376
+    },
+    "NEW BRUNSWICK": {
+      "latitude": 40.4951365,
+      "longitude": -74.4439254
     }
   },
   "South Dakota": {
@@ -303,6 +367,48 @@
     "WASHINGTON": {
       "latitude": 38.8950368,
       "longitude": -77.0365427
+    }
+  },
+  "Washington": {
+    "LAKE STEVENS": {
+      "latitude": 48.0197794,
+      "longitude": -122.0660914
+    }
+  },
+  "Indiana": {
+    "LAWRENCEBURG": {
+      "latitude": 39.090891,
+      "longitude": -84.8499504
+    }
+  },
+  "Arkansas": {
+    "LITTLE ROCK": {
+      "latitude": 34.7465071,
+      "longitude": -92.2896267
+    }
+  },
+  "South Carolina": {
+    "ROCK HILL": {
+      "latitude": 34.9248667,
+      "longitude": -81.0250784
+    }
+  },
+  "Missouri": {
+    "SAINT LOUIS": {
+      "latitude": 38.6280278,
+      "longitude": -90.1910154
+    }
+  },
+  "Virginia": {
+    "STEPHENS CITY": {
+      "latitude": 39.0832225,
+      "longitude": -78.2182851
+    }
+  },
+  "Oklahoma": {
+    "TULSA": {
+      "latitude": 36.1563122,
+      "longitude": -95.9927516
     }
   }
 }
