@@ -18,27 +18,211 @@ RS_DISCOUNT = 0.05
 # TODO: Update positions and archetypes for CFB 26
 # TODO: CONFIRM ARCHETYPE VALUATIONS
 DEFAULT_POSITION_REQUIREMENTS = {
-    'QB': {'min': 3, 'ideal': 4, 'archetypes': {'POCKET PASSER': 1, 'BACKFIELD CREATOR': 0.75, 'DUAL THREAT': 0.75, 'PURE RUNNER': 0.5}},
-    'HB': {'min': 4, 'ideal': 6, 'archetypes': {'BACKFIELD THREAT': 0.75, 'CONTACT SEEKER': 0.75, 'ELUSIVE BRUISER': 0.75, 'EAST/WEST PLAYMAKER': 0.75, 'NORTH/SOUTH RECEIVER': 0.5, 'NORTH/SOUTH BLOCKER': 0.2}},
-    'FB': {'min': 0, 'ideal': 0, 'archetypes': {'UTILITY': 0, 'BLOCKING': 0}},
-    'WR': {'min': 6, 'ideal': 8, 'archetypes': {'CONTESTED SPECIALIST': 0.75, 'ELUSIVE ROUTE RUNNER': 0.75, 'GRITTY POSSESSION': 0.75, 'PHYSICAL ROUTE RUNNER': 0.75, 'ROUTE ARTIST': 0.75, 'SPEEDSTER': 0.75, 'GADGET': 0.5}},
-    'TE': {'min': 3, 'ideal': 4, 'archetypes': {'PHYSICAL ROUTE RUNNER': 0.75, 'VERTICAL THREAT': 0.75, 'GRITTY POSSESSION': 0.5, 'POSSESSION': 0.5, 'PURE BLOCKER': 0.25}},
-    'LT': {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 1, 'AGILE': 0.8, 'WELL ROUNDED': 0.75, 'RAW STRENGTH': 0.6}},
-    'LG': {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 0.6, 'AGILE': 1, 'WELL ROUNDED': 0.75, 'RAW STRENGTH': 1}},
-    'C':  {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 0.5, 'AGILE': 1, 'WELL ROUNDED': 0.75, 'RAW STRENGTH': 1}},
-    'RG': {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 0.6, 'AGILE': 1, 'WELL ROUNDED': 0.75, 'RAW STRENGTH': 1}},
-    'RT': {'min': 3, 'ideal': 4, 'archetypes': {'PASS PROTECTOR': 0.8, 'AGILE': 0.8, 'WELL ROUNDED': 0.75, 'RAW STRENGTH': 0.75}},
-    'LEDG': {'min': 3, 'ideal': 4, 'archetypes': {'POWER RUSHER': 0.9, 'SPEED RUSHER': 0.9, 'EDGE SETTER': 1}},
-    'REDG': {'min': 3, 'ideal': 4, 'archetypes': {'POWER RUSHER': 0.9, 'SPEED RUSHER': 1, 'EDGE SETTER': 1, 'PURE POWER': 0.5}},
-    'DT': {'min': 3, 'ideal': 4, 'archetypes': {'POWER RUSHER': 0.9, 'SPEED RUSHER': 0.8, 'GAP SPECIALIST': 1, 'PURE POWER': 0.5}},
-    'WILL': {'min': 3, 'ideal': 4, 'archetypes': {'LURKER': 1, 'SIGNAL CALLER': 0.8, 'THUMPER': 1}},
-    'MIKE': {'min': 3, 'ideal': 4, 'archetypes': {'LURKER': 0.8, 'SIGNAL CALLER': 1, 'THUMPER': 0.8}},
-    'SAM': {'min': 3, 'ideal': 4, 'archetypes': {'LURKER': 1, 'SIGNAL CALLER': 0.8, 'THUMPER': 1}},
-    'CB': {'min': 5, 'ideal': 7, 'archetypes': {'BOUNDARY': 1, 'BUMP AND RUN': 1, 'ZONE': 1, 'FIELD': 1}},
-    'FS': {'min': 2, 'ideal': 3, 'archetypes': {'COVERAGE SPECIALIST': 1, 'HYBRID': 0.75, 'BOX SPECIALIST': 0.5}},
-    'SS': {'min': 2, 'ideal': 3, 'archetypes': {'COVERAGE SPECIALIST': 0.75, 'HYBRID': 0.1, 'BOX SPECIALIST': 0.8}},
-    'K': {'min': 1, 'ideal': 1, 'archetypes': {'ACCURATE': 0.75, 'POWER': 1}},
-    'P': {'min': 1, 'ideal': 1, 'archetypes': {'ACCURATE': 0.75, 'POWER': 1}}
+    'QB': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'POCKET PASSER': 1.15,
+            'BACKFIELD CREATOR': 0.75,
+            'DUAL THREAT': 1.00,
+            'PURE RUNNER': 0.80,
+        }
+    },
+    'HB': {
+        'min': 4,
+        'ideal': 6,
+        'archetypes': {
+            'BACKFIELD THREAT': 0.90,
+            'CONTACT SEEKER': 0.80,
+            'ELUSIVE BRUISER': 1.20,
+            'EAST/WEST PLAYMAKER': 1.00,
+            'NORTH/SOUTH RECEIVER': 0.80,
+            'NORTH/SOUTH BLOCKER': 0.20,
+        }
+    },
+    'FB': {
+        'min': 0,
+        'ideal': 0,
+        'archetypes': {
+            'UTILITY': 1.00,
+            'BLOCKING': 1.00,
+        }
+    },
+    'WR': {
+        'min': 5,
+        'ideal': 8,
+        'archetypes': {
+            'SPEEDSTER': 1.15,
+            'CONTESTED SPECIALIST': 1.10,
+            'ELUSIVE ROUTE RUNNER': 1.10,
+            'PHYSICAL ROUTE RUNNER': 1.00,
+            'ROUTE ARTIST': 1.00,
+            'GADGET': 0.90,
+            'GRITTY POSSESSION': 0.80,
+        }
+    },
+    'TE': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'PHYSICAL ROUTE RUNNER': 0.90,
+            'PURE BLOCKER': 1.00,
+            'VERTICAL THREAT': 1.10,
+            'GRITTY POSSESSION': 0.85,
+            'PURE POSSESSION': 1.00,
+        }
+    },
+    'LT': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'PASS PROTECTOR': 1.10,
+            'AGILE': 1.00,
+            'WELL ROUNDED': 1.00,
+            'RAW STRENGTH': 0.80,
+        }
+    },
+    'LG': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'PASS PROTECTOR': 0.90,
+            'AGILE': 1.10,
+            'WELL ROUNDED': 1.20,
+            'RAW STRENGTH': 1.00,
+        }
+    },
+    'C': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'PASS PROTECTOR': 0.90,
+            'AGILE': 1.10,
+            'WELL ROUNDED': 1.20,
+            'RAW STRENGTH': 1.00,
+        }
+    },
+    'RG': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'PASS PROTECTOR': 0.90,
+            'AGILE': 1.10,
+            'WELL ROUNDED': 1.20,
+            'RAW STRENGTH': 1.00,
+        }
+    },
+    'RT': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'PASS PROTECTOR': 1.10,
+            'AGILE': 1.00,
+            'WELL ROUNDED': 1.00,
+            'RAW STRENGTH': 0.80,
+        }
+    },
+    'LEDG': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'POWER RUSHER': 1.00,
+            'SPEED RUSHER': 1.10,
+            'EDGE SETTER': 0.90,
+            'PURE POWER': 0.90,
+        }
+    },
+    'REDG': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'POWER RUSHER': 1.00,
+            'SPEED RUSHER': 1.10,
+            'EDGE SETTER': 0.90,
+            'PURE POWER': 0.90,
+        }
+    },
+    'DT': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'POWER RUSHER': 1.00,
+            'SPEED RUSHER': 0.90,
+            'GAP SPECIALIST': 1.10,
+            'PURE POWER': 1.00,
+        }
+    },
+    'WILL': {
+        'min': 2,
+        'ideal': 4,
+        'archetypes': {
+            'LURKER': 1.10,
+            'SIGNAL CALLER': 0.80,
+            'THUMPER': 1.00,
+        }
+    },
+    'MIKE': {
+        'min': 3,
+        'ideal': 4,
+        'archetypes': {
+            'LURKER': 1.10,
+            'SIGNAL CALLER': 0.80,
+            'THUMPER': 1.10,
+        }
+    },
+    'SAM': {
+        'min': 2,
+        'ideal': 4,
+        'archetypes': {
+            'LURKER': 1.10,
+            'SIGNAL CALLER': 0.80,
+            'THUMPER': 1.00,
+        }
+    },
+    'CB': {
+        'min': 5,
+        'ideal': 7,
+        'archetypes': {
+            'BOUNDARY': 0.95,
+            'BUMP AND RUN': 1.05,
+            'ZONE': 1.05,
+            'FIELD': 1.00,
+        }
+    },
+    'FS': {
+        'min': 2,
+        'ideal': 3,
+        'archetypes': {
+            'COVERAGE SPECIALIST': 1.10,
+            'HYBRID': 1.10,
+            'BOX SPECIALIST': 0.85,
+        }
+    },
+    'SS': {
+        'min': 2,
+        'ideal': 3,
+        'archetypes': {
+            'COVERAGE SPECIALIST': 1.10,
+            'HYBRID': 0.90,
+            'BOX SPECIALIST': 0.85,
+        }
+    },
+    'K': {
+        'min': 1,
+        'ideal': 1,
+        'archetypes': {
+            'ACCURATE': 0.90,
+            'POWER': 1.00,
+        }
+    },
+    'P': {
+        'min': 1,
+        'ideal': 1,
+        'archetypes': {
+            'ACCURATE': 0.90,
+            'POWER': 1.00,
+        }
+    }
 }
 
 # Position depth
