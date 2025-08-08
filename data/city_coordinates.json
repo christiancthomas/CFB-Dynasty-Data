@@ -159,12 +159,32 @@
     "SOUTHLAKE": {
       "latitude": 32.9412363,
       "longitude": -97.1341783
+    },
+    "AUSTIN": {
+      "latitude": 30.2711286,
+      "longitude": -97.7436995
+    },
+    "EULESS": {
+      "latitude": 32.8370727,
+      "longitude": -97.0819541
+    },
+    "FREEPORT": {
+      "latitude": 28.9496782,
+      "longitude": -95.3461433
+    },
+    "FRIENDSWOOD": {
+      "latitude": 29.5293998,
+      "longitude": -95.2010447
     }
   },
   "Utah": {
     "ALPINE": {
       "latitude": 40.453253,
       "longitude": -111.7779596
+    },
+    "PARK CITY": {
+      "latitude": 40.6460921,
+      "longitude": -111.4979963
     }
   },
   "Georgia": {
@@ -179,6 +199,18 @@
     "LEESBURG": {
       "latitude": 31.7324556,
       "longitude": -84.1711966
+    },
+    "DOUGLASVILLE": {
+      "latitude": 33.7514966,
+      "longitude": -84.7477136
+    },
+    "HAMPTON": {
+      "latitude": 33.3870578,
+      "longitude": -84.2829784
+    },
+    "HIRAM": {
+      "latitude": 33.8756601,
+      "longitude": -84.7621592
     }
   },
   "Alabama": {
@@ -197,6 +229,14 @@
     "ROANOKE": {
       "latitude": 33.1522422,
       "longitude": -85.3748173
+    },
+    "BIRMINGHAM": {
+      "latitude": 33.5206824,
+      "longitude": -86.8024326
+    },
+    "MOBILE": {
+      "latitude": 30.6913462,
+      "longitude": -88.0437509
     }
   },
   "California": {
@@ -235,6 +275,126 @@
     "WATSONVILLE": {
       "latitude": 36.9092773,
       "longitude": -121.7529071
+    },
+    "ADELANTO": {
+      "latitude": 34.5838077,
+      "longitude": -117.4082453
+    },
+    "ANAHEIM": {
+      "latitude": 33.8347516,
+      "longitude": -117.911732
+    },
+    "BALDWIN HILLS": {
+      "latitude": 34.0146113,
+      "longitude": -118.3603104
+    },
+    "CARSON": {
+      "latitude": 33.8322043,
+      "longitude": -118.2517547
+    },
+    "CULVER CITY": {
+      "latitude": 34.0211224,
+      "longitude": -118.396466
+    },
+    "FONTANA": {
+      "latitude": 34.0922947,
+      "longitude": -117.43433
+    },
+    "GARDENA": {
+      "latitude": 33.8815702,
+      "longitude": -118.2918113
+    },
+    "HUNTINGTON BEACH": {
+      "latitude": 33.6783336,
+      "longitude": -118.000016
+    },
+    "LADERA RANCH": {
+      "latitude": 33.5520801,
+      "longitude": -117.6384556
+    },
+    "LAWNDALE": {
+      "latitude": 33.8951219,
+      "longitude": -118.3526323
+    },
+    "LONG BEACH": {
+      "latitude": 33.7690164,
+      "longitude": -118.191604
+    },
+    "LOS ALAMITOS": {
+      "latitude": 33.8038865,
+      "longitude": -118.0772433
+    },
+    "LOS ANGELES": {
+      "latitude": 34.0536909,
+      "longitude": -118.242766
+    },
+    "MISSION VIEJO": {
+      "latitude": 33.5965685,
+      "longitude": -117.659405
+    },
+    "MURRIETA": {
+      "latitude": 33.560832,
+      "longitude": -117.210656
+    },
+    "NORTH HOLLYWOOD": {
+      "latitude": 34.1649502,
+      "longitude": -118.374752
+    },
+    "OCEANSIDE": {
+      "latitude": 33.1958696,
+      "longitude": -117.379483
+    },
+    "OXNARD": {
+      "latitude": 34.1976308,
+      "longitude": -119.180381
+    },
+    "PALMDALE": {
+      "latitude": 34.5793131,
+      "longitude": -118.11711
+    },
+    "PHELAN": {
+      "latitude": 34.426298,
+      "longitude": -117.5725026
+    },
+    "REDONDO BEACH": {
+      "latitude": 33.8398289,
+      "longitude": -118.3845942
+    },
+    "RIVERSIDE": {
+      "latitude": 33.9824949,
+      "longitude": -117.374238
+    },
+    "SACRAMENTO": {
+      "latitude": 38.5810606,
+      "longitude": -121.493895
+    },
+    "SAN JUAN CAPISTRANO": {
+      "latitude": 33.5016932,
+      "longitude": -117.6625509
+    },
+    "SAN PEDRO": {
+      "latitude": 33.7358518,
+      "longitude": -118.2922934
+    },
+    "SHERMAN OAKS": {
+      "latitude": 34.1508718,
+      "longitude": -118.448986
+    },
+    "STOCKTON": {
+      "latitude": 37.9577016,
+      "longitude": -121.290779
+    },
+    "UPLAND": {
+      "latitude": 34.09751,
+      "longitude": -117.6483876
+    },
+    "VALENCIA": {
+      "latitude": 34.4131941,
+      "longitude": -118.559849
+    },
+    "VENTURA": {
+      "latitude": 34.4458248,
+      "longitude": -119.0779359
     }
   },
   "Louisiana": {
@@ -275,6 +435,10 @@
     "PICAYUNE": {
       "latitude": 30.5254692,
       "longitude": -89.6795084
+    },
+    "PETAL": {
+      "latitude": 31.3465627,
+      "longitude": -89.2600605
     }
   },
   "Tennessee": {
@@ -289,6 +453,10 @@
     "GREENEVILLE": {
       "latitude": 36.1631575,
       "longitude": -82.8309861
+    },
+    "ANTIOCH": {
+      "latitude": 36.0600602,
+      "longitude": -86.6722192
     }
   },
   "Colorado": {
@@ -319,6 +487,14 @@
     "PORT SAINT LUCIE": {
       "latitude": 27.2939333,
       "longitude": -80.3503283
+    },
+    "PENSACOLA": {
+      "latitude": 30.421309,
+      "longitude": -87.2169149
+    },
+    "SANFORD": {
+      "latitude": 28.8117345,
+      "longitude": -81.2680223
     }
   },
   "Illinois": {
@@ -355,12 +531,24 @@
     "SPRINGFIELD": {
       "latitude": 39.9306677,
       "longitude": -75.3201879
+    },
+    "PHILADELPHIA": {
+      "latitude": 39.9527237,
+      "longitude": -75.1635262
+    },
+    "PITTSBURGH": {
+      "latitude": 40.4416941,
+      "longitude": -79.9900861
     }
   },
   "Ohio": {
     "WARREN": {
       "latitude": 39.4203978,
       "longitude": -84.180897
+    },
+    "TROY": {
+      "latitude": 40.0394982,
+      "longitude": -84.2032767
     }
   },
   "Delaware": {
@@ -373,6 +561,14 @@
     "LAKE STEVENS": {
       "latitude": 48.0197794,
       "longitude": -122.0660914
+    },
+    "AUBURN": {
+      "latitude": 47.3075369,
+      "longitude": -122.2301808
+    },
+    "BELLEVUE": {
+      "latitude": 47.6144219,
+      "longitude": -122.192337
     }
   },
   "Indiana": {
@@ -403,12 +599,110 @@
     "STEPHENS CITY": {
       "latitude": 39.0832225,
       "longitude": -78.2182851
+    },
+    "DINWIDDIE": {
+      "latitude": 37.0712818,
+      "longitude": -77.6480714
+    },
+    "WOODBRIDGE": {
+      "latitude": 38.636447,
+      "longitude": -77.2676335
     }
   },
   "Oklahoma": {
     "TULSA": {
       "latitude": 36.1563122,
       "longitude": -95.9927516
+    }
+  },
+  "Alaska": {
+    "ANCHORAGE": {
+      "latitude": 61.2163129,
+      "longitude": -149.894852
+    }
+  },
+  "Arizona": {
+    "CHANDLER": {
+      "latitude": 33.3062031,
+      "longitude": -111.841185
+    },
+    "MESA": {
+      "latitude": 33.4151005,
+      "longitude": -111.831455
+    },
+    "PHOENIX": {
+      "latitude": 33.4484367,
+      "longitude": -112.074141
+    },
+    "SCOTTSDALE": {
+      "latitude": 33.4942189,
+      "longitude": -111.926018
+    }
+  },
+  "Connecticut": {
+    "CHESHIRE": {
+      "latitude": 41.4989861,
+      "longitude": -72.900658
+    }
+  },
+  "Michigan": {
+    "CLARKSTON": {
+      "latitude": 42.735863,
+      "longitude": -83.4188304
+    },
+    "PORTAGE": {
+      "latitude": 42.2011538,
+      "longitude": -85.5800022
+    }
+  },
+  "North Carolina": {
+    "GREENSBORO": {
+      "latitude": 36.0726355,
+      "longitude": -79.7919754
+    },
+    "ROCKY MOUNT": {
+      "latitude": 35.9423833,
+      "longitude": -77.7956949
+    }
+  },
+  "West Virginia": {
+    "HUNTINGTON": {
+      "latitude": 38.4192496,
+      "longitude": -82.445154
+    }
+  },
+  "Oregon": {
+    "LAKE OSWEGO": {
+      "latitude": 45.4206749,
+      "longitude": -122.670649
+    }
+  },
+  "Nevada": {
+    "LAS VEGAS": {
+      "latitude": 36.1674263,
+      "longitude": -115.1484131
+    }
+  },
+  "New York": {
+    "LINDENHURST": {
+      "latitude": 40.6867667,
+      "longitude": -73.3734547
+    },
+    "STATEN ISLAND": {
+      "latitude": 40.5834557,
+      "longitude": -74.1496048
+    }
+  },
+  "Hawaii": {
+    "PALOLO": {
+      "latitude": 21.2932315,
+      "longitude": -157.798427
+    }
+  },
+  "Minnesota": {
+    "PRIOR LAKE": {
+      "latitude": 44.7133271,
+      "longitude": -93.4226873
     }
   }
 }
