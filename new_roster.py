@@ -1,72 +1,50 @@
+import logging
 import pandas as pd
 import os
 import glob
-import logging
 from typing import Optional
-
-# Configure logging
-def setup_logging(log_level=logging.INFO, log_file=None):
-    """
-    Set up logging configuration.
-
-    Args:
-        log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-        log_file: Optional file path to write logs to
-    """
-    log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-
-    handlers = [logging.StreamHandler()]  # Console output
-    if log_file:
-        handlers.append(logging.FileHandler(log_file))
-
-    logging.basicConfig(
-        level=log_level,
-        format=log_format,
-        handlers=handlers,
-        force=True  # Override any existing configuration
-    )
+from utils.log import setup_logging, get_logger
+from models.Player import Player
 
 # Create logger for this module
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
+# def advance_year(year: str, redshirt: bool) -> str:
+#     """
+#     Advance a player's year and handle redshirt status.
 
-def advance_year(year: str, redshirt: bool) -> str:
-    """
-    Advance a player's year and handle redshirt status.
+#     Args:
+#         year (str): Current year (e.g., 'FR', 'SO', 'HS')
+#         redshirt (bool): Whether the player is being redshirted
 
-    Args:
-        year (str): Current year (e.g., 'FR', 'SO', 'HS')
-        redshirt (bool): Whether the player is being redshirted
+#     Returns:
+#         str: Advanced year with redshirt notation if applicable
+#     """
 
-    Returns:
-        str: Advanced year with redshirt notation if applicable
-    """
-    logger.debug(f"Advancing year for player: year={year}, redshirt={redshirt}")
+#     year_mapping = {
+#         'HS': 'FR',
+#         'FR': 'SO',
+#         'SO': 'JR',
+#         'JR': 'SR',
+#         'SR': 'GRADUATED',
+#         'FR (RS)': 'SO (RS)',
+#         'SO (RS)': 'JR (RS)',
+#         'JR (RS)': 'SR (RS)',
+#         'SR (RS)': 'GRADUATED'
+#     }
 
-    year_mapping = {
-        'HS': 'FR',
-        'FR': 'SO',
-        'SO': 'JR',
-        'JR': 'SR',
-        'SR': 'GRADUATED',
-        'FR (RS)': 'SO (RS)',
-        'SO (RS)': 'JR (RS)',
-        'JR (RS)': 'SR (RS)',
-        'SR (RS)': 'GRADUATED'
-    }
+#     if redshirt and 'RS' not in year:
+#         # Add redshirt designation without advancing year
+#         new_year = f"{year} (RS)"
+#         logger.debug(f"Applied redshirt: {year} -> {new_year}")
+#         return new_year
 
-    if redshirt and 'RS' not in year:
-        # Add redshirt designation without advancing year
-        new_year = f"{year} (RS)"
-        logger.debug(f"Applied redshirt: {year} -> {new_year}")
-        return new_year
+#     # Advance the year normally
+#     new_year = year_mapping.get(year, year)
+#     if new_year != year:
+#         logger.debug(f"Advanced year: {year} -> {new_year}")
 
-    # Advance the year normally
-    new_year = year_mapping.get(year, year)
-    if new_year != year:
-        logger.debug(f"Advanced year: {year} -> {new_year}")
-
-    return new_year
+#     return new_year
 
 def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_name: Optional[str] = None) -> pd.DataFrame:
     """
@@ -113,9 +91,14 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
 
     # Apply the function to advance the year for each player
     logger.info("Advancing years for current roster players")
-    roster_copy['YEAR'] = roster_copy.apply(
-        lambda row: advance_year(row['YEAR'], row['REDSHIRT']), axis=1
-    )
+    def advance_player_year(row):
+        # Convert column names to lowercase to match Player class parameters
+        row_dict = row.to_dict()
+        normalized_dict = {key.lower().replace(' ', '_'): value for key, value in row_dict.items()}
+        player = Player(**normalized_dict)
+        return player.advance_year()
+
+    roster_copy['YEAR'] = roster_copy.apply(advance_player_year, axis=1)
 
     # Filter the roster data to include only players who are not graduating or drafted or cut
     initial_count = len(roster_copy)
@@ -144,9 +127,18 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
 
     # Advance the year for recruits from HS to FR
     logger.debug("Advancing years for incoming recruits")
-    recruits_filtered.loc[:, 'YEAR'] = recruits_filtered['YEAR'].apply(
-        lambda year: advance_year(year, False)
-    )
+    def advance_recruit_year(year):
+        # For recruits, we only need to handle HS -> FR transition
+        year_mapping = {
+            'HS': 'FR',
+            'FR': 'SO',
+            'SO': 'JR',
+            'JR': 'SR',
+            'SR': 'GRADUATED'
+        }
+        return year_mapping.get(year, year)
+
+    recruits_filtered.loc[:, 'YEAR'] = recruits_filtered['YEAR'].apply(advance_recruit_year)
 
     # Combine the filtered roster data with the recruits
     logger.info("Combining roster with incoming recruits")
@@ -155,17 +147,9 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     final_count = len(new_roster_df)
     logger.info(f"Combined roster size: {final_count} players ({filtered_count} returning + {commit_count} recruits)")
 
-    # Drop the specified columns
-    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'NATIONAL RANKING']
-    columns_dropped = [col for col in columns_to_drop if col in new_roster_df.columns]
-    new_roster_df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
-
-    if columns_dropped:
-        logger.debug(f"Dropped columns: {columns_dropped}")
-
     # Define the position order
     position_order = [
-        'QB', 'HB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT',
+        'QB', 'HB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT',
         'LEDG', 'REDG', 'DT', 'WILL', 'MIKE', 'SAM', 'CB', 'FS', 'SS', 'K', 'P', 'ATH'
     ]
 
@@ -182,9 +166,9 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     if 'OVERALL' in new_roster_df.columns and not new_roster_df['OVERALL'].isna().all():
         sort_cols.append('OVERALL')
         sort_ascending.append(False)
-        logger.debug("Sorting by position and rating")
+        logger.debug("Sorting by position and overall rating")
     else:
-        logger.debug("Sorting by position only (no rating data available)")
+        logger.debug("Sorting by position only (no overall rating data available)")
 
     new_roster_df.sort_values(by=sort_cols, ascending=sort_ascending, inplace=True)
 
@@ -196,22 +180,41 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
                 logger.debug(f"Added missing column '{col}' with default value")
             df[col] = default_val
 
-    # Set columns to default values
-    logger.debug("Resetting overall and status columns to default values")
+    # Ensure TRANSFER OUT column exists (add if missing)
     ensure_columns_exist(new_roster_df, {
-        'OVERALL': "",
-        'BASE OVERALL': "",
-        'VALUE': "",
-        'STATUS': ""
+        'TRANSFER OUT': False
     })
 
-    logger.debug("Resetting redshirt and cut flags to False")
-    ensure_columns_exist(new_roster_df, {
-        'REDSHIRT': False,
-        'CUT': False
-    })
+    # Define the exact column order for the final CSV
+    final_column_order = [
+        'REDSHIRT', 'FIRST NAME', 'LAST NAME', 'YEAR', 'POSITION', 'OVERALL',
+        'BASE OVERALL', 'CITY', 'STATE', 'ARCHETYPE', 'DEV TRAIT', 'CUT',
+        'TRANSFER OUT', 'DRAFTED', 'VALUE', 'STATUS'
+    ]
+
+    # Select and reorder columns, filling missing columns with empty values
+    logger.debug("Reordering columns for final output")
+    for col in final_column_order:
+        if col not in new_roster_df.columns:
+            new_roster_df[col] = "" if col in ['OVERALL', 'BASE OVERALL', 'DRAFTED', 'VALUE', 'STATUS'] else False
+            logger.debug(f"Added missing column '{col}' with default value")
+
+    # Select only the desired columns in the specified order
+    new_roster_df = new_roster_df[final_column_order].copy()
+
+    # Reset specific columns to desired default values
+    logger.debug("Resetting columns to default values")
+    new_roster_df['REDSHIRT'] = ""
+    new_roster_df['CUT'] = False
+    new_roster_df['TRANSFER OUT'] = False
+    new_roster_df['OVERALL'] = ""
+    new_roster_df['BASE OVERALL'] = ""
+    new_roster_df['DRAFTED'] = ""
+    new_roster_df['VALUE'] = ""
+    new_roster_df['STATUS'] = ""
 
     logger.info(f"Roster generation completed successfully. Final roster: {len(new_roster_df)} players")
+    logger.debug(f"Final columns: {list(new_roster_df.columns)}")
 
     # Log position breakdown
     if logger.isEnabledFor(logging.DEBUG):
