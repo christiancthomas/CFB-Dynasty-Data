@@ -5,10 +5,11 @@ class Player:
     Represents a player in the CFB Dynasty Data system.
     Players have attributes such as first & last name, position, team, year, and redshirt status.
     """
-    def __init__(self, first_name: str, last_name: str, position: str, year: str, overall: str, base_overall: str,
-                 city: str, state: str, archetype: str, dev_trait: str, cut: bool, drafted: str, redshirt: bool,
-                 value: float, status: str, team: str, national_rank: str, stars: str, gem_status: str, committed_to: str,
-                 transfer: bool = False, transferred: bool = False):
+    def __init__(self, first_name: str, last_name: str, position: str, year: str, overall: str = 0, base_overall: str = 0,
+                 city: str = "", state: str = "", archetype: str = "", dev_trait: str = "", cut: bool = False,
+                 drafted: str = "", redshirt: bool = False, value: float = 0.0, status: str = "", team: str = "",
+                 national_rank: str = "", stars: str = "", gem_status: str = "", committed_to: str = "",
+                 transfer: bool = False, transfer_out: bool = False):
         self.first_name = first_name
         self.last_name = last_name
         self.position = position
@@ -30,7 +31,7 @@ class Player:
         self.gem_status = gem_status
         self.committed_to = committed_to
         self.transfer = transfer
-        self.transferred = transferred
+        self.transfer_out = transfer_out
 
         # Generate a unique ID based on player attributes, ignoring case and spaces
         id_vars = f"{first_name}{last_name}{position}{city}{state}".lower().replace(" ", "")

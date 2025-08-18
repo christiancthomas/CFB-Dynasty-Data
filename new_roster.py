@@ -92,9 +92,12 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     # Apply the function to advance the year for each player
     logger.info("Advancing years for current roster players")
     def advance_player_year(row):
-        player = Player(**row.to_dict())
+        # Convert column names to lowercase to match Player class parameters
+        row_dict = row.to_dict()
+        normalized_dict = {key.lower().replace(' ', '_'): value for key, value in row_dict.items()}
+        player = Player(**normalized_dict)
         return player.advance_year()
-    
+
     roster_copy['YEAR'] = roster_copy.apply(advance_player_year, axis=1)
 
     # Filter the roster data to include only players who are not graduating or drafted or cut
@@ -129,12 +132,12 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
         year_mapping = {
             'HS': 'FR',
             'FR': 'SO',
-            'SO': 'JR', 
+            'SO': 'JR',
             'JR': 'SR',
             'SR': 'GRADUATED'
         }
         return year_mapping.get(year, year)
-    
+
     recruits_filtered.loc[:, 'YEAR'] = recruits_filtered['YEAR'].apply(advance_recruit_year)
 
     # Combine the filtered roster data with the recruits
@@ -143,14 +146,6 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
 
     final_count = len(new_roster_df)
     logger.info(f"Combined roster size: {final_count} players ({filtered_count} returning + {commit_count} recruits)")
-
-    # Drop the specified columns
-    columns_to_drop = ['STARS', 'GEM STATUS', 'COMMITTED TO', 'CITY', 'STATE', 'NATIONAL RANKING']
-    columns_dropped = [col for col in columns_to_drop if col in new_roster_df.columns]
-    new_roster_df.drop(columns=columns_to_drop, inplace=True, errors='ignore')
-
-    if columns_dropped:
-        logger.debug(f"Dropped columns: {columns_dropped}")
 
     # Define the position order
     position_order = [
@@ -185,22 +180,41 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
                 logger.debug(f"Added missing column '{col}' with default value")
             df[col] = default_val
 
-    # Set columns to default values
-    logger.debug("Resetting rating and status columns to default values")
+    # Ensure TRANSFER OUT column exists (add if missing)
     ensure_columns_exist(new_roster_df, {
-        'RATING': "",
-        'BASE RATING': "",
-        'VALUE': "",
-        'STATUS': ""
+        'TRANSFER OUT': False
     })
 
-    logger.debug("Resetting redshirt and cut flags to False")
-    ensure_columns_exist(new_roster_df, {
-        'REDSHIRT': False,
-        'CUT': False
-    })
+    # Define the exact column order for the final CSV
+    final_column_order = [
+        'REDSHIRT', 'FIRST NAME', 'LAST NAME', 'YEAR', 'POSITION', 'OVERALL',
+        'BASE OVERALL', 'CITY', 'STATE', 'ARCHETYPE', 'DEV TRAIT', 'CUT',
+        'TRANSFER OUT', 'DRAFTED', 'VALUE', 'STATUS'
+    ]
+
+    # Select and reorder columns, filling missing columns with empty values
+    logger.debug("Reordering columns for final output")
+    for col in final_column_order:
+        if col not in new_roster_df.columns:
+            new_roster_df[col] = "" if col in ['OVERALL', 'BASE OVERALL', 'DRAFTED', 'VALUE', 'STATUS'] else False
+            logger.debug(f"Added missing column '{col}' with default value")
+
+    # Select only the desired columns in the specified order
+    new_roster_df = new_roster_df[final_column_order].copy()
+
+    # Reset specific columns to desired default values
+    logger.debug("Resetting columns to default values")
+    new_roster_df['REDSHIRT'] = ""
+    new_roster_df['CUT'] = False
+    new_roster_df['TRANSFER OUT'] = False
+    new_roster_df['OVERALL'] = ""
+    new_roster_df['BASE OVERALL'] = ""
+    new_roster_df['DRAFTED'] = ""
+    new_roster_df['VALUE'] = ""
+    new_roster_df['STATUS'] = ""
 
     logger.info(f"Roster generation completed successfully. Final roster: {len(new_roster_df)} players")
+    logger.debug(f"Final columns: {list(new_roster_df.columns)}")
 
     # Log position breakdown
     if logger.isEnabledFor(logging.DEBUG):
