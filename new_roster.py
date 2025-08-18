@@ -105,7 +105,8 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     filtered_roster_df = roster_copy[
         (roster_copy['YEAR'] != 'GRADUATED') &
         (roster_copy['CUT'] != True) &
-        (roster_copy['DRAFTED'].isna())
+        (roster_copy['DRAFTED'].isna()) &
+        (roster_copy['TRANSFER OUT'] != True)
     ].copy()
 
     filtered_count = len(filtered_roster_df)
