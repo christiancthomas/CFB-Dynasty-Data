@@ -5,38 +5,48 @@ import pandas as pd
 def create_mock_roster():
     "returns a pandas DataFrame of mock roster data"
     roster_data = {
-            'POSITION': ['QB', 'FS', 'ROLB', 'CB'],
+            'REDSHIRT': [False, False, False, True],
             'FIRST NAME': ['CHRISTIAN', 'KALLUM', 'SAM', 'CHASE'],
             'LAST NAME': ['THOMAS', 'GRIFFIN', 'VEGA', 'THOMAS'],
             'YEAR': ['JR', 'SO (RS)', 'SR', 'FR'],
+            'POSITION': ['QB', 'FS', 'ROLB', 'CB'],
             'OVERALL': [91, 90, 92, 75],
             'BASE OVERALL': [88, 89, 90, 72],
             'CITY': ['ROUND ROCK', 'DALLAS', 'COPPERAS COVE', 'SAN ANTONIO'],
             'STATE': ['TX', 'TX', 'TX', 'TX'],
             'ARCHETYPE': ['DUAL THREAT', 'HYBRID', 'POWER RUSHER', 'BUMP AND RUN'],
             'DEV TRAIT': ['ELITE', 'STAR', 'IMPACT', 'NORMAL'],
+            'CUT': [False, False, False, True],
+            'TRANSFER OUT': [False, False, False, False],
+            'DRAFTED': ['', '', '', ''],
             'VALUE': ['', '', '', ''],
             'STATUS': ['ACTIVE', 'ACTIVE', 'GRADUATING', 'ACTIVE'],
-            'CUT': [False, False, False, True],
-            'REDSHIRT': [False, False, False, True],
-            'DRAFTED': [None, None, None, None]
         }
     return pd.DataFrame(roster_data)
 
 def create_mock_recruits():
     "returns a pandas DataFrame of mock recruiting data"
     recruiting_data = {
-            'POSITION': ['QB', 'FS', 'CB'],
+            'REDSHIRT': [False, False, False],
             'FIRST NAME': ['JACK', 'JAMES', 'ORION'],
             'LAST NAME': ['SMITH', 'JOHNSON', 'GREENWOOD'],
-            'ARCHETYPE': ['FIELD GENERAL', 'ZONE', 'SLOT'],
             'YEAR': ['HS', 'HS', 'HS'],
+            'POSITION': ['QB', 'FS', 'CB'],
+            'OVERALL': [80, 85, 82],
+            'BASE OVERALL': [78, 83, 80],
+            'CITY': ['LOS ANGELES', 'DALLAS', 'KILLEEN'],
+            'STATE': ['CA', 'TX', 'TX'],
+            'ARCHETYPE': ['FIELD GENERAL', 'ZONE', 'SLOT'],
             'DEV TRAIT': ['NORMAL', 'STAR', 'ELITE'],
+            'CUT': [False, False, False],
+            'TRANSFER OUT': [False, False, False],
+            'DRAFTED': ['', '', ''],
+            'VALUE': ['', '', ''],
+            'STATUS': ['', '', ''],
             'STARS': [4, 5, 4],
             'GEM STATUS': ['NORMAL', 'BUST', 'GEM'],
             'COMMITTED TO': ['USC', 'TEXAS A&M', 'TEXAS TECH'],
-            'CITY': ['LOS ANGELES', 'DALLAS', 'KILLEEN'],
-            'STATE': ['CA', 'TX', 'TX']
+            'NATIONAL RANKING': [100, 50, 200]
         }
     return pd.DataFrame(recruiting_data)
 

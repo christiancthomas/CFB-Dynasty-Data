@@ -70,7 +70,7 @@ class Player:
             'gem_status': self.gem_status,
             'committed_to': self.committed_to,
             'transfer': self.transfer,
-            'transferred': self.transferred,
+            'transfer_out': self.transfer_out,
         }
 
     @classmethod
@@ -106,7 +106,7 @@ class Player:
             gem_status=player_data.get('gem_status', ''),
             committed_to=player_data.get('committed_to', ''),
             transfer=player_data.get('transfer', False),
-            transferred=player_data.get('transferred', False),
+            transfer_out=player_data.get('transfer_out', False),
             )
 
     def advance_year(self):

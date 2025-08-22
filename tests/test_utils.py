@@ -1,7 +1,11 @@
 import unittest
 import os
+import sys
 import pandas as pd
 import shutil
+
+# Add project root to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models.Player import Player
 from utils.player_integration import create_hybrid_roster, sync_dataframe_with_players, dataframe_to_players, players_to_dataframe
@@ -72,14 +76,3 @@ class TestPlayerIntegration(unittest.TestCase):
         df, players = create_hybrid_roster(self.csv_file)
         new_df = players_to_dataframe(players)
         pd.testing.assert_frame_equal(df, new_df)
-        position_analysis.append({
-                        'Position': pos,
-                        'Total Players': len(pos_data),
-                        'Average Value': pos_data['VALUE'].mean(),
-                        'Top Player': pos_data.loc[pos_data['VALUE'].idxmax(), 'FIRST NAME'] + ' ' + pos_data.loc[pos_data['VALUE'].idxmax(), 'LAST NAME'],
-                        'Top Value': pos_data['VALUE'].max()
-                    })
-
-        position_analysis_df = pd.DataFrame(position_analysis)
-        position_analysis_path = os.path.join(data_folder, 'position_analysis.csv')
-        position_analysis_df.to_csv(position_analysis_path, index=False)

@@ -91,10 +91,10 @@ class TestPlayer(unittest.TestCase):
         
         # Check that all attributes are present in the dictionary
         expected_keys = [
-            'first_name', 'last_name', 'team', 'position', 'year',
+            'id', 'first_name', 'last_name', 'team', 'position', 'year',
             'overall', 'base_overall', 'city', 'state', 'archetype', 'dev_trait',
             'cut', 'drafted', 'redshirt', 'value', 'status', 'national_rank',
-            'stars', 'gem_status', 'committed_to'
+            'stars', 'gem_status', 'committed_to', 'transfer', 'transfer_out'
         ]
         
         for key in expected_keys:

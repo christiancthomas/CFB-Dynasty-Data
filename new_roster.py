@@ -103,7 +103,7 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     # Filter the roster data to include only players who are not graduating or drafted or cut
     initial_count = len(roster_copy)
     filtered_roster_df = roster_copy[
-        (roster_copy['YEAR'] != 'GRADUATED') &
+        (roster_copy['STATUS'] != 'GRADUATING') &
         (roster_copy['CUT'] != True) &
         (roster_copy['DRAFTED'].isna()) &
         (roster_copy['TRANSFER OUT'] != True)
@@ -207,7 +207,6 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     logger.debug("Resetting columns to default values")
     new_roster_df['REDSHIRT'] = ""
     new_roster_df['CUT'] = False
-    new_roster_df['TRANSFER OUT'] = False
     new_roster_df['OVERALL'] = ""
     new_roster_df['BASE OVERALL'] = ""
     new_roster_df['DRAFTED'] = ""

@@ -175,6 +175,14 @@
     "FRIENDSWOOD": {
       "latitude": 29.5293998,
       "longitude": -95.2010447
+    },
+    "CROSBY": {
+      "latitude": 33.5778818,
+      "longitude": -101.2855737
+    },
+    "NEWTON": {
+      "latitude": 30.8118989,
+      "longitude": -93.740504
     }
   },
   "Utah": {
@@ -185,6 +193,10 @@
     "PARK CITY": {
       "latitude": 40.6460921,
       "longitude": -111.4979963
+    },
+    "DRAPER": {
+      "latitude": 40.5247777,
+      "longitude": -111.8627989
     }
   },
   "Georgia": {
@@ -211,6 +223,10 @@
     "HIRAM": {
       "latitude": 33.8756601,
       "longitude": -84.7621592
+    },
+    "BLOOMINGDALE": {
+      "latitude": 32.1324249,
+      "longitude": -81.2990018
     }
   },
   "Alabama": {
@@ -395,6 +411,38 @@
     "VENTURA": {
       "latitude": 34.4458248,
       "longitude": -119.0779359
+    },
+    "BELLFLOWER": {
+      "latitude": 33.8825705,
+      "longitude": -118.1167679
+    },
+    "CORONA": {
+      "latitude": 33.8752945,
+      "longitude": -117.566444
+    },
+    "ENCINITAS": {
+      "latitude": 33.0369867,
+      "longitude": -117.2919818
+    },
+    "FRESNO": {
+      "latitude": 36.7394421,
+      "longitude": -119.78483
+    },
+    "NEWPORT BEACH": {
+      "latitude": 33.6170092,
+      "longitude": -117.9294401
+    },
+    "NORCO": {
+      "latitude": 33.9323307,
+      "longitude": -117.5508901
+    },
+    "RANCHO CUCAMONGA": {
+      "latitude": 34.1033192,
+      "longitude": -117.575173
+    },
+    "SANTA ANA": {
+      "latitude": 33.7494951,
+      "longitude": -117.873221
     }
   },
   "Louisiana": {
@@ -549,6 +597,10 @@
     "TROY": {
       "latitude": 40.0394982,
       "longitude": -84.2032767
+    },
+    "BELLEFONTAINE": {
+      "latitude": 40.3611643,
+      "longitude": -83.7596557
     }
   },
   "Delaware": {
@@ -569,6 +621,10 @@
     "BELLEVUE": {
       "latitude": 47.6144219,
       "longitude": -122.192337
+    },
+    "FEDERAL WAY": {
+      "latitude": 47.313494,
+      "longitude": -122.33931
     }
   },
   "Indiana": {
@@ -591,6 +647,10 @@
   },
   "Missouri": {
     "SAINT LOUIS": {
+      "latitude": 38.6280278,
+      "longitude": -90.1910154
+    },
+    "ST. LOUIS": {
       "latitude": 38.6280278,
       "longitude": -90.1910154
     }
@@ -697,12 +757,38 @@
     "PALOLO": {
       "latitude": 21.2932315,
       "longitude": -157.798427
+    },
+    "HONOLULU": {
+      "latitude": 21.304547,
+      "longitude": -157.855676
     }
   },
   "Minnesota": {
     "PRIOR LAKE": {
       "latitude": 44.7133271,
       "longitude": -93.4226873
+    }
+  },
+  "Kansas": {
+    "DERBY": {
+      "latitude": 37.5455735,
+      "longitude": -97.2689331
+    },
+    "LAWRENCE": {
+      "latitude": 38.9719137,
+      "longitude": -95.2359403
+    }
+  },
+  "Nebraska": {
+    "LINCOLN": {
+      "latitude": 40.8088861,
+      "longitude": -96.7077751
+    }
+  },
+  "Ha": {
+    "WAIMANALO": {
+      "latitude": 21.3453025,
+      "longitude": -157.7214218
     }
   }
 }
