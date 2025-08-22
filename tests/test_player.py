@@ -36,7 +36,7 @@ class TestPlayer(unittest.TestCase):
     def test_player_initialization(self):
         """Test that a player can be initialized with all attributes."""
         player = Player(**self.sample_player_data)
-        
+
         # Test all attributes are set correctly
         self.assertEqual(player.first_name, 'John')
         self.assertEqual(player.last_name, 'Smith')
@@ -62,7 +62,7 @@ class TestPlayer(unittest.TestCase):
     def test_player_id_generation(self):
         """Test that player ID is generated correctly using MD5 hash."""
         player = Player(**self.sample_player_data)
-        
+
         # Generate expected ID
         expected_id = md5(f"{player.first_name}{player.last_name}{player.position}{player.city}{player.state}".lower().replace(" ", "").encode()).hexdigest()
         self.assertEqual(player.player_id, expected_id)
@@ -70,7 +70,7 @@ class TestPlayer(unittest.TestCase):
     def test_player_id_uniqueness(self):
         """Test that different players have different IDs."""
         player1 = Player(**self.sample_player_data)
-        
+
         # Create a different player
         different_data = self.sample_player_data.copy()
         different_data['first_name'] = 'Mike'
@@ -88,7 +88,7 @@ class TestPlayer(unittest.TestCase):
         """Test converting player to dictionary representation."""
         player = Player(**self.sample_player_data)
         player_dict = player.to_dict()
-        
+
         # Check that all attributes are present in the dictionary
         expected_keys = [
             'id', 'first_name', 'last_name', 'team', 'position', 'year',
@@ -96,10 +96,10 @@ class TestPlayer(unittest.TestCase):
             'cut', 'drafted', 'redshirt', 'value', 'status', 'national_rank',
             'stars', 'gem_status', 'committed_to', 'transfer', 'transfer_out'
         ]
-        
+
         for key in expected_keys:
             self.assertIn(key, player_dict)
-        
+
         # Verify some specific values
         self.assertEqual(player_dict['first_name'], 'John')
         self.assertEqual(player_dict['last_name'], 'Smith')
@@ -109,7 +109,7 @@ class TestPlayer(unittest.TestCase):
     def test_from_dict_class_method(self):
         """Test creating a player from dictionary data."""
         player = Player.from_dict(self.sample_player_data)
-        
+
         # Verify the player was created correctly
         self.assertEqual(player.first_name, 'John')
         self.assertEqual(player.last_name, 'Smith')
@@ -124,15 +124,15 @@ class TestPlayer(unittest.TestCase):
             'position': 'RB',
             'year': 'SO'
         }
-        
+
         player = Player.from_dict(minimal_data)
-        
+
         # Check required fields
         self.assertEqual(player.first_name, 'Jane')
         self.assertEqual(player.last_name, 'Doe')
         self.assertEqual(player.position, 'RB')
         self.assertEqual(player.year, 'SO')
-        
+
         # Check that optional fields have default values
         self.assertEqual(player.overall, '')
         self.assertEqual(player.city, '')
@@ -144,7 +144,7 @@ class TestPlayer(unittest.TestCase):
         player = Player(**self.sample_player_data)
         player.year = 'FR'
         player.redshirt = False
-        
+
         new_year = player.advance_year()
         self.assertEqual(new_year, 'SO')
         self.assertEqual(player.year, 'SO')
@@ -154,7 +154,7 @@ class TestPlayer(unittest.TestCase):
         player = Player(**self.sample_player_data)
         player.year = 'FR'
         player.redshirt = True
-        
+
         new_year = player.advance_year()
         self.assertEqual(new_year, 'FR (RS)')
         self.assertEqual(player.year, 'FR (RS)')
@@ -164,7 +164,7 @@ class TestPlayer(unittest.TestCase):
         player = Player(**self.sample_player_data)
         player.year = 'SO (RS)'
         player.redshirt = True
-        
+
         new_year = player.advance_year()
         self.assertEqual(new_year, 'JR (RS)')
         self.assertEqual(player.year, 'JR (RS)')
@@ -174,7 +174,7 @@ class TestPlayer(unittest.TestCase):
         player = Player(**self.sample_player_data)
         player.year = 'SR'
         player.redshirt = False
-        
+
         new_year = player.advance_year()
         self.assertEqual(new_year, 'GRADUATED')
         self.assertEqual(player.year, 'GRADUATED')
@@ -184,7 +184,7 @@ class TestPlayer(unittest.TestCase):
         player = Player(**self.sample_player_data)
         player.year = 'HS'
         player.redshirt = False
-        
+
         new_year = player.advance_year()
         self.assertEqual(new_year, 'FR')
         self.assertEqual(player.year, 'FR')
@@ -194,7 +194,7 @@ class TestPlayer(unittest.TestCase):
         player = Player(**self.sample_player_data)
         player.year = 'INVALID'
         player.redshirt = False
-        
+
         new_year = player.advance_year()
         self.assertEqual(new_year, 'INVALID')
         self.assertEqual(player.year, 'INVALID')
@@ -205,7 +205,7 @@ class TestPlayer(unittest.TestCase):
         data = self.sample_player_data.copy()
         data['cut'] = True
         data['redshirt'] = True
-        
+
         player = Player(**data)
         self.assertTrue(player.cut)
         self.assertTrue(player.redshirt)
@@ -214,7 +214,7 @@ class TestPlayer(unittest.TestCase):
         """Test numeric attributes are handled correctly."""
         data = self.sample_player_data.copy()
         data['value'] = 150.75
-        
+
         player = Player(**data)
         self.assertEqual(player.value, 150.75)
         self.assertIsInstance(player.value, float)
@@ -224,7 +224,7 @@ class TestPlayer(unittest.TestCase):
         original_player = Player(**self.sample_player_data)
         player_dict = original_player.to_dict()
         reconstructed_player = Player.from_dict(player_dict)
-        
+
         # Compare all attributes
         self.assertEqual(original_player.first_name, reconstructed_player.first_name)
         self.assertEqual(original_player.last_name, reconstructed_player.last_name)
@@ -233,7 +233,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(original_player.value, reconstructed_player.value)
         self.assertEqual(original_player.cut, reconstructed_player.cut)
         self.assertEqual(original_player.redshirt, reconstructed_player.redshirt)
-        
+
         # IDs should be the same since they're based on the same data
         self.assertEqual(original_player.player_id, reconstructed_player.player_id)
 
@@ -242,7 +242,7 @@ class TestPlayer(unittest.TestCase):
         data = self.sample_player_data.copy()
         data['drafted'] = ''
         data['committed_to'] = ''
-        
+
         player = Player(**data)
         self.assertEqual(player.drafted, '')
         self.assertEqual(player.committed_to, '')
@@ -253,12 +253,12 @@ class TestPlayer(unittest.TestCase):
         data['first_name'] = "José"
         data['last_name'] = "O'Brien-Smith"
         data['city'] = "San José"
-        
+
         player = Player(**data)
         self.assertEqual(player.first_name, "José")
         self.assertEqual(player.last_name, "O'Brien-Smith")
         self.assertEqual(player.city, "San José")
-        
+
         # ID should still be generated properly
         self.assertIsNotNone(player.player_id)
         self.assertIsInstance(player.player_id, str)

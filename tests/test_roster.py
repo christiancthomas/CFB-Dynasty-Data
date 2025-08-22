@@ -46,32 +46,32 @@ class TestRosterScripts(unittest.TestCase):
     def test_generate_roster(self):
         """Test that the generate_roster function works correctly with updated column logic"""
         print("test_roster.generate_roster")
-        
+
         roster_df = pd.read_csv(MOCK_ROSTER_FILE)
         recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
-        
+
         # Test roster generation
         new_roster_df = generate_roster(roster_df, recruiting_df, 'TEXAS TECH')
-        
+
         # Create output directory if needed
         if not os.path.exists(OUTPUT_DIR):
             os.makedirs(OUTPUT_DIR)
-        
+
         # Save the result
         new_roster_df.to_csv(OUTPUT_FILE, index=False)
-        
+
         # Test that output file was created
         self.assertTrue(os.path.exists(OUTPUT_FILE))
-        
+
         # Test that the DataFrame has the correct column structure
         expected_columns = [
             'REDSHIRT', 'FIRST NAME', 'LAST NAME', 'YEAR', 'POSITION', 'OVERALL',
             'BASE OVERALL', 'CITY', 'STATE', 'ARCHETYPE', 'DEV TRAIT', 'CUT',
             'TRANSFER OUT', 'DRAFTED', 'VALUE', 'STATUS'
         ]
-        
+
         self.assertEqual(list(new_roster_df.columns), expected_columns)
-        
+
         # Test that specific columns have been reset to default values
         self.assertTrue(all(new_roster_df['REDSHIRT'] == ""))
         self.assertTrue(all(new_roster_df['CUT'] == False))
@@ -80,14 +80,14 @@ class TestRosterScripts(unittest.TestCase):
         self.assertTrue(all(new_roster_df['DRAFTED'] == ""))
         self.assertTrue(all(new_roster_df['VALUE'] == ""))
         self.assertTrue(all(new_roster_df['STATUS'] == ""))
-        
+
         # Test that we have some players (roster + recruits - filtered out players)
         self.assertGreater(len(new_roster_df), 0)
-        
+
     def test_player_filtering(self):
         """Test that players are correctly filtered out based on graduation, cut, drafted, transfer out"""
         print("test_roster.player_filtering")
-        
+
         # Create a custom roster with players that should be filtered out
         test_roster_data = {
             'FIRST NAME': ['John', 'Jane', 'Bob', 'Alice', 'Charlie'],
@@ -112,22 +112,22 @@ class TestRosterScripts(unittest.TestCase):
             'COMMITTED TO': ['TTU', 'TTU', 'TTU', 'TTU', 'TTU'],
             'TRANSFER OUT': [False, False, False, True, False]  # Alice should be filtered
         }
-        
+
         test_roster_df = pd.DataFrame(test_roster_data)
-        
+
         # Create minimal recruiting data
         recruiting_data = create_mock_recruits()
-        
+
         # Generate roster
         new_roster_df = generate_roster(test_roster_df, recruiting_data, 'TEXAS TECH')
-        
+
         # Check that filtered players are not in the result
         player_names = list(new_roster_df['FIRST NAME'] + ' ' + new_roster_df['LAST NAME'])
-        
+
         self.assertNotIn('Jane Smith', player_names)  # Cut player
-        self.assertNotIn('Bob Brown', player_names)   # Drafted player  
+        self.assertNotIn('Bob Brown', player_names)   # Drafted player
         self.assertNotIn('Alice Wilson', player_names) # Transfer out player
-        
+
         # Check that remaining players are present + recruits
         self.assertIn('John Doe', player_names)      # Should remain
         self.assertIn('Charlie Johnson', player_names) # Should remain
