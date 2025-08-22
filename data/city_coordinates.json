@@ -183,6 +183,14 @@
     "NEWTON": {
       "latitude": 30.8118989,
       "longitude": -93.740504
+    },
+    "CEDAR PARK": {
+      "latitude": 30.5217116,
+      "longitude": -97.827833
+    },
+    "COPPELL": {
+      "latitude": 32.9552598,
+      "longitude": -97.0155703
     }
   },
   "Utah": {
@@ -443,6 +451,38 @@
     "SANTA ANA": {
       "latitude": 33.7494951,
       "longitude": -117.873221
+    },
+    "ANTIOCH": {
+      "latitude": 38.0093296,
+      "longitude": -121.8106925
+    },
+    "BRENTWOOD": {
+      "latitude": 37.9317766,
+      "longitude": -121.696026
+    },
+    "COMPTON": {
+      "latitude": 33.894927,
+      "longitude": -118.226624
+    },
+    "CONCORD": {
+      "latitude": 37.9768525,
+      "longitude": -122.0335624
+    },
+    "GREENBRAE": {
+      "latitude": 37.9485356,
+      "longitude": -122.5247031
+    },
+    "INGELWOOD": {
+      "latitude": 29.5035726,
+      "longitude": -95.4995999
+    },
+    "MORENO VALLEY": {
+      "latitude": 33.9375177,
+      "longitude": -117.2305791
+    },
+    "SAN DIEGO": {
+      "latitude": 32.7174202,
+      "longitude": -117.162772
     }
   },
   "Louisiana": {
@@ -543,12 +583,20 @@
     "SANFORD": {
       "latitude": 28.8117345,
       "longitude": -81.2680223
+    },
+    "BUSHNELL": {
+      "latitude": 28.6644827,
+      "longitude": -82.1117399
     }
   },
   "Illinois": {
     "JOLIET": {
       "latitude": 41.5263603,
       "longitude": -88.0840212
+    },
+    "SPRINGFIELD": {
+      "latitude": 39.7990175,
+      "longitude": -89.6439575
     }
   },
   "New Jersey": {
@@ -625,6 +673,14 @@
     "FEDERAL WAY": {
       "latitude": 47.313494,
       "longitude": -122.33931
+    },
+    "LYNNWOOD": {
+      "latitude": 47.8278656,
+      "longitude": -122.3053932
+    },
+    "STEILACOOM": {
+      "latitude": 47.1703692,
+      "longitude": -122.596287
     }
   },
   "Indiana": {
@@ -735,12 +791,20 @@
     "LAKE OSWEGO": {
       "latitude": 45.4206749,
       "longitude": -122.670649
+    },
+    "PORTLAND": {
+      "latitude": 45.5202471,
+      "longitude": -122.674194
     }
   },
   "Nevada": {
     "LAS VEGAS": {
       "latitude": 36.1674263,
       "longitude": -115.1484131
+    },
+    "RENO": {
+      "latitude": 39.5261788,
+      "longitude": -119.812658
     }
   },
   "New York": {
@@ -789,6 +853,12 @@
     "WAIMANALO": {
       "latitude": 21.3453025,
       "longitude": -157.7214218
+    }
+  },
+  "Wisconsin": {
+    "WAUKESHA": {
+      "latitude": 43.0622536,
+      "longitude": -88.3123889
     }
   }
 }
