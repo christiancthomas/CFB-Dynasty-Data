@@ -8,7 +8,7 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from new_roster import generate_roster
+from cfb_dynasty.data.roster_generator import generate_roster
 from tests.utils import create_mock_roster, create_mock_recruits
 
 DOWNLOADS_FOLDER = os.path.expanduser("~/Downloads")

@@ -7,8 +7,8 @@ import shutil
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from models.Player import Player
-from utils.player_integration import create_hybrid_roster, sync_dataframe_with_players, dataframe_to_players, players_to_dataframe
+from cfb_dynasty.models.player import Player
+from cfb_dynasty.utils.player_integration import create_hybrid_roster, sync_dataframe_with_players, dataframe_to_players, players_to_dataframe
 
 class TestPlayerIntegration(unittest.TestCase):
 

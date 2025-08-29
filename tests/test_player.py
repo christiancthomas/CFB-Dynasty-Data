@@ -2,7 +2,7 @@ import unittest
 import sys
 import os
 from hashlib import md5
-from models.Player import Player
+from cfb_dynasty.models.player import Player
 
 
 class TestPlayer(unittest.TestCase):
