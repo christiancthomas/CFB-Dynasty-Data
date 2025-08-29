@@ -25,8 +25,11 @@ def calculate_player_value(row, dev_trait_multipliers=None, rs_discount_rate=Non
     dev_multiplier = dev_trait_multipliers.get(row['DEV TRAIT'], 1.00)
     remaining_dev_years = REMAINING_YEARS.get(row['YEAR'], 0)
     
+    # Handle both 'BASE RATING' and 'BASE OVERALL' column names for backward compatibility
+    base_rating = row.get('BASE RATING', row.get('BASE OVERALL', 0))
+    
     value = round(
-        row['BASE RATING'] * dev_multiplier * (1 + remaining_dev_years / 4) * (1 - discount), 2
+        base_rating * dev_multiplier * (1 + remaining_dev_years / 4) * (1 - discount), 2
     )
     return value
 
@@ -166,9 +169,14 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
 
     # Ensure the required columns are present
     required_columns = [
-        'POSITION', 'FIRST NAME', 'LAST NAME', 'YEAR', 'RATING', 'BASE RATING',
+        'POSITION', 'FIRST NAME', 'LAST NAME', 'YEAR', 'RATING', 
         'ARCHETYPE', 'DEV TRAIT', 'VALUE', 'STATUS', 'CUT', 'REDSHIRT', 'DRAFTED'
     ]
+    # Check for either BASE RATING or BASE OVERALL
+    has_base_rating = 'BASE RATING' in roster_df.columns or 'BASE OVERALL' in roster_df.columns
+    if not has_base_rating:
+        required_columns.append('BASE RATING')  # Will trigger missing column error
+    
     missing_columns = [col for col in required_columns if col not in roster_df.columns]
     if missing_columns:
         raise ValueError(f"CSV file is missing required columns: {missing_columns}")

@@ -4,8 +4,8 @@ import os
 import pandas as pd
 import shutil
 
-from dynasty.config.constants import DEV_TRAIT_MULTIPLIERS, RS_DISCOUNT
-from dynasty.analysis.player_valuation import calculate_player_value
+from cfb_dynasty.config.constants import DEV_TRAIT_MULTIPLIERS, RS_DISCOUNT
+from cfb_dynasty.analysis.roster_analysis import calculate_player_value
 from tests.utils import create_mock_roster, create_mock_recruits, add_player
 
 class TestRosterAnalysis(unittest.TestCase):
