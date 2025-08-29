@@ -2,7 +2,6 @@
 import unittest
 import os
 import pandas as pd
-import shutil
 
 from cfb_dynasty.config.constants import DEV_TRAIT_MULTIPLIERS, RS_DISCOUNT
 from cfb_dynasty.analysis.roster_analysis import calculate_player_value
