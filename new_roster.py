@@ -94,7 +94,21 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     def advance_player_year(row):
         # Convert column names to lowercase to match Player class parameters
         row_dict = row.to_dict()
+        
+        # Create column mapping for Player class compatibility
+        column_mapping = {
+            'national_ranking': 'national_rank',  # Handle test data inconsistency
+            # Add other mappings as needed
+        }
+        
+        # Normalize column names
         normalized_dict = {key.lower().replace(' ', '_'): value for key, value in row_dict.items()}
+        
+        # Apply specific column mappings
+        for old_key, new_key in column_mapping.items():
+            if old_key in normalized_dict:
+                normalized_dict[new_key] = normalized_dict.pop(old_key)
+        
         player = Player(**normalized_dict)
         return player.advance_year()
 
@@ -105,7 +119,7 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     filtered_roster_df = roster_copy[
         (roster_copy['STATUS'] != 'GRADUATING') &
         (roster_copy['CUT'] != True) &
-        (roster_copy['DRAFTED'].isna()) &
+        ((roster_copy['DRAFTED'].isna()) | (roster_copy['DRAFTED'] == '')) &
         (roster_copy['TRANSFER OUT'] != True)
     ].copy()
 
