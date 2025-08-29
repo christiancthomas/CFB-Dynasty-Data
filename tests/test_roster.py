@@ -185,6 +185,6 @@ class TestRosterScripts(unittest.TestCase):
         orion = new_roster_df[(new_roster_df['FIRST NAME'] == 'ORION') & (new_roster_df['LAST NAME'] == 'GREENWOOD')]
         self.assertEqual(orion['ARCHETYPE'].values[0], 'SLOT')
 
-        # test that christian thomas is an improviser archetype
+        # test that christian thomas has a dual threat archetype (from mock data)
         christian = new_roster_df[(new_roster_df['FIRST NAME'] == 'CHRISTIAN') & (new_roster_df['LAST NAME'] == 'THOMAS')]
-        self.assertEqual(christian['ARCHETYPE'].values[0], 'IMPROVISER')
+        self.assertEqual(christian['ARCHETYPE'].values[0], 'DUAL THREAT')
