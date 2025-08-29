@@ -4,7 +4,7 @@
 SCRIPT_DIR=$(dirname "$0")
 
 # Define the path to the roster_analysis.py file relative to the script directory
-SCRIPT_PATH="$SCRIPT_DIR/roster_analysis.py"
+SCRIPT_PATH="$SCRIPT_DIR/../cfb_dynasty/analysis/roster_analysis.py"
 
 # Define the Downloads folder path
 DOWNLOADS_FOLDER="$HOME/Downloads"
@@ -24,7 +24,7 @@ echo "Using script: $SCRIPT_PATH"
 echo "Output folder: $DOWNLOADS_FOLDER"
 
 # Activate the virtual environment
-source "$SCRIPT_DIR/venv/bin/activate"
+source "$SCRIPT_DIR/../.venv/bin/activate"
 
 # Run the roster_analysis.py script with the found CSV file as input
 # and output the resulting CSVs to the Downloads folder

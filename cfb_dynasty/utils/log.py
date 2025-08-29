@@ -1,6 +1,8 @@
+"""Logging utilities for CFB Dynasty Data system."""
+
 import logging
 
-# Configure logging
+
 def setup_logging(log_level=logging.INFO, log_file=None):
     """
     Set up logging configuration.
@@ -21,6 +23,7 @@ def setup_logging(log_level=logging.INFO, log_file=None):
         handlers=handlers,
         force=True  # Override any existing configuration
     )
+
 
 def get_logger(name: str) -> logging.Logger:
     """

@@ -1,12 +1,26 @@
+"""File utilities for CFB Dynasty Data system."""
+
 import os
 import glob
 import pandas as pd
 
 
-default_folder = os.path.expanduser('~/Downloads')
+DEFAULT_FOLDER = os.path.expanduser('~/Downloads')
 
-def load_roster(folder=default_folder):
 
+def load_roster(folder=None):
+    """
+    Load roster CSV file from specified folder.
+    
+    Args:
+        folder (str): Folder path to search for roster files (default: ~/Downloads)
+        
+    Returns:
+        pd.DataFrame or None: Loaded roster DataFrame or None if error
+    """
+    if folder is None:
+        folder = DEFAULT_FOLDER
+    
     # Find roster files
     roster_files = glob.glob(os.path.join(folder, '*[Rr]oster.csv'))
 
@@ -40,16 +54,23 @@ def load_roster(folder=default_folder):
             print(f"❌ Error loading roster file: {e}")
             return None
 
-def export_files(folder=default_folder, roster_df=None, recruiting_plan=None, position_requirements=None):
+
+def export_files(folder=None, roster_df=None, recruiting_plan=None, position_requirements=None):
     """
     Export comprehensive analysis results to CSV files.
 
     Args:
-        folder: Base folder for exports (default: ~/Downloads)
-        roster_df: Processed roster DataFrame with player values and status
-        recruiting_plan: DataFrame with recruiting priorities
-        position_requirements: Dictionary with position requirements for detailed analysis
+        folder (str): Base folder for exports (default: ~/Downloads)
+        roster_df (pd.DataFrame): Processed roster DataFrame with player values and status
+        recruiting_plan (pd.DataFrame): DataFrame with recruiting priorities
+        position_requirements (dict): Dictionary with position requirements for detailed analysis
+        
+    Returns:
+        bool: True if export successful, False otherwise
     """
+    if folder is None:
+        folder = DEFAULT_FOLDER
+        
     if roster_df is None:
         print("❌ Cannot export - no roster data provided.")
         return False

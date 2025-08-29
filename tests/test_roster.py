@@ -3,30 +3,134 @@ import unittest
 import os
 import pandas as pd
 import shutil
+import sys
 
-from new_roster import generate_roster
-import utils as u
+# Add project root to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from cfb_dynasty.data.roster_generator import generate_roster
+from tests.utils import create_mock_roster, create_mock_recruits
 
 DOWNLOADS_FOLDER = os.path.expanduser("~/Downloads")
 MOCK_ROSTER_FILE = os.path.join(DOWNLOADS_FOLDER, "Test_Roster.csv")
 MOCK_RECRUITING_FILE = os.path.join(DOWNLOADS_FOLDER, "Test_Recruiting_Hub.csv")
 OUTPUT_DIR = os.path.join(DOWNLOADS_FOLDER, "test_cfb_dynasty_data")
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, "Test_New_Roster.csv")
-ROSTER_ANALYSIS_SCRIPT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "roster_analysis.py")
 
 class TestRosterScripts(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         # Create mock roster CSV
-        roster_data = u.create_mock_roster()
+        roster_data = create_mock_roster()
 
         # Create mock recruiting CSV
-        recruiting_data = u.create_mock_recruits()
+        recruiting_data = create_mock_recruits()
 
         # Save mock CSV files
         roster_data.to_csv(MOCK_ROSTER_FILE, index=False)
         recruiting_data.to_csv(MOCK_RECRUITING_FILE, index=False)
+
+    @classmethod
+    def tearDownClass(cls):
+        # Remove mock CSV files
+        if os.path.exists(MOCK_ROSTER_FILE):
+            os.remove(MOCK_ROSTER_FILE)
+        if os.path.exists(MOCK_RECRUITING_FILE):
+            os.remove(MOCK_RECRUITING_FILE)
+        if os.path.exists(OUTPUT_FILE):
+            os.remove(OUTPUT_FILE)
+        if os.path.exists(OUTPUT_DIR):
+            shutil.rmtree(OUTPUT_DIR)
+
+    def test_generate_roster(self):
+        """Test that the generate_roster function works correctly with updated column logic"""
+        print("test_roster.generate_roster")
+
+        roster_df = pd.read_csv(MOCK_ROSTER_FILE)
+        recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
+
+        # Test roster generation
+        new_roster_df = generate_roster(roster_df, recruiting_df, 'TEXAS TECH')
+
+        # Create output directory if needed
+        if not os.path.exists(OUTPUT_DIR):
+            os.makedirs(OUTPUT_DIR)
+
+        # Save the result
+        new_roster_df.to_csv(OUTPUT_FILE, index=False)
+
+        # Test that output file was created
+        self.assertTrue(os.path.exists(OUTPUT_FILE))
+
+        # Test that the DataFrame has the correct column structure
+        expected_columns = [
+            'REDSHIRT', 'FIRST NAME', 'LAST NAME', 'YEAR', 'POSITION', 'OVERALL',
+            'BASE OVERALL', 'CITY', 'STATE', 'ARCHETYPE', 'DEV TRAIT', 'CUT',
+            'TRANSFER OUT', 'DRAFTED', 'VALUE', 'STATUS'
+        ]
+
+        self.assertEqual(list(new_roster_df.columns), expected_columns)
+
+        # Test that specific columns have been reset to default values
+        self.assertTrue(all(new_roster_df['REDSHIRT'] == ""))
+        self.assertTrue(all(new_roster_df['CUT'] == False))
+        self.assertTrue(all(new_roster_df['OVERALL'] == ""))
+        self.assertTrue(all(new_roster_df['BASE OVERALL'] == ""))
+        self.assertTrue(all(new_roster_df['DRAFTED'] == ""))
+        self.assertTrue(all(new_roster_df['VALUE'] == ""))
+        self.assertTrue(all(new_roster_df['STATUS'] == ""))
+
+        # Test that we have some players (roster + recruits - filtered out players)
+        self.assertGreater(len(new_roster_df), 0)
+
+    def test_player_filtering(self):
+        """Test that players are correctly filtered out based on graduation, cut, drafted, transfer out"""
+        print("test_roster.player_filtering")
+
+        # Create a custom roster with players that should be filtered out
+        test_roster_data = {
+            'FIRST NAME': ['John', 'Jane', 'Bob', 'Alice', 'Charlie'],
+            'LAST NAME': ['Doe', 'Smith', 'Brown', 'Wilson', 'Johnson'],
+            'POSITION': ['QB', 'RB', 'WR', 'TE', 'OL'],
+            'YEAR': ['FR', 'SO', 'SR', 'JR', 'SO'],
+            'OVERALL': ['80', '85', '90', '82', '78'],
+            'BASE OVERALL': ['78', '83', '88', '80', '76'],
+            'CITY': ['Dallas', 'Houston', 'Austin', 'Tyler', 'Plano'],
+            'STATE': ['TX', 'TX', 'TX', 'TX', 'TX'],
+            'ARCHETYPE': ['Dual Threat', 'Power Back', 'Speed', 'Possession', 'Pass Pro'],
+            'DEV TRAIT': ['Star', 'Normal', 'Impact', 'Elite', 'Normal'],
+            'CUT': [False, True, False, False, False],  # Jane should be filtered
+            'DRAFTED': ['', '', 'NFL', '', ''],  # Bob should be filtered
+            'REDSHIRT': [False, False, False, False, False],
+            'VALUE': ['100', '120', '150', '110', '90'],
+            'STATUS': ['Active', 'Active', 'Active', 'Active', 'Active'],
+            'TEAM': ['TTU', 'TTU', 'TTU', 'TTU', 'TTU'],
+            'NATIONAL RANKING': ['100', '200', '50', '150', '300'],
+            'STARS': ['4', '3', '5', '4', '3'],
+            'GEM STATUS': ['Normal', 'Normal', 'Blue', 'Normal', 'Normal'],
+            'COMMITTED TO': ['TTU', 'TTU', 'TTU', 'TTU', 'TTU'],
+            'TRANSFER OUT': [False, False, False, True, False]  # Alice should be filtered
+        }
+
+        test_roster_df = pd.DataFrame(test_roster_data)
+
+        # Create minimal recruiting data
+        recruiting_data = create_mock_recruits()
+
+        # Generate roster
+        new_roster_df = generate_roster(test_roster_df, recruiting_data, 'TEXAS TECH')
+
+        # Check that filtered players are not in the result
+        player_names = list(new_roster_df['FIRST NAME'] + ' ' + new_roster_df['LAST NAME'])
+
+        self.assertNotIn('Jane Smith', player_names)  # Cut player
+        self.assertNotIn('Bob Brown', player_names)   # Drafted player
+        self.assertNotIn('Alice Wilson', player_names) # Transfer out player
+
+        # Check that remaining players are present + recruits
+        self.assertIn('John Doe', player_names)      # Should remain
+        self.assertIn('Charlie Johnson', player_names) # Should remain
 
 
     @classmethod
@@ -81,6 +185,6 @@ class TestRosterScripts(unittest.TestCase):
         orion = new_roster_df[(new_roster_df['FIRST NAME'] == 'ORION') & (new_roster_df['LAST NAME'] == 'GREENWOOD')]
         self.assertEqual(orion['ARCHETYPE'].values[0], 'SLOT')
 
-        # test that christian thomas is an improviser archetype
+        # test that christian thomas has a dual threat archetype (from mock data)
         christian = new_roster_df[(new_roster_df['FIRST NAME'] == 'CHRISTIAN') & (new_roster_df['LAST NAME'] == 'THOMAS')]
-        self.assertEqual(christian['ARCHETYPE'].values[0], 'IMPROVISER')
+        self.assertEqual(christian['ARCHETYPE'].values[0], 'DUAL THREAT')

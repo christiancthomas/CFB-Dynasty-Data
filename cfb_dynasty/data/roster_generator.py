@@ -1,50 +1,16 @@
+"""Roster generation functionality for CFB Dynasty Data system."""
+
 import logging
 import pandas as pd
 import os
 import glob
 from typing import Optional
-from cfb_dynasty.utils.log import setup_logging, get_logger
-from cfb_dynasty.models.player import Player
+from ..utils.log import setup_logging, get_logger
+from ..models.player import Player
 
 # Create logger for this module
 logger = get_logger(__name__)
 
-# def advance_year(year: str, redshirt: bool) -> str:
-#     """
-#     Advance a player's year and handle redshirt status.
-
-#     Args:
-#         year (str): Current year (e.g., 'FR', 'SO', 'HS')
-#         redshirt (bool): Whether the player is being redshirted
-
-#     Returns:
-#         str: Advanced year with redshirt notation if applicable
-#     """
-
-#     year_mapping = {
-#         'HS': 'FR',
-#         'FR': 'SO',
-#         'SO': 'JR',
-#         'JR': 'SR',
-#         'SR': 'GRADUATED',
-#         'FR (RS)': 'SO (RS)',
-#         'SO (RS)': 'JR (RS)',
-#         'JR (RS)': 'SR (RS)',
-#         'SR (RS)': 'GRADUATED'
-#     }
-
-#     if redshirt and 'RS' not in year:
-#         # Add redshirt designation without advancing year
-#         new_year = f"{year} (RS)"
-#         logger.debug(f"Applied redshirt: {year} -> {new_year}")
-#         return new_year
-
-#     # Advance the year normally
-#     new_year = year_mapping.get(year, year)
-#     if new_year != year:
-#         logger.debug(f"Advanced year: {year} -> {new_year}")
-
-#     return new_year
 
 def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_name: Optional[str] = None) -> pd.DataFrame:
     """
@@ -240,7 +206,8 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     # Return the new roster
     return new_roster_df
 
-def _to_csv(data_path: str, data_folder: str, new_path: str = 'New_Roster.csv') -> None:
+
+def save_roster_to_csv(data_path: str, data_folder: str, new_path: str = 'New_Roster.csv') -> None:
     """
     Process roster and recruiting CSV files and generate new roster.
 
@@ -301,9 +268,10 @@ def _to_csv(data_path: str, data_folder: str, new_path: str = 'New_Roster.csv') 
         logger.info(f"Processing complete: {processed_count} files processed successfully, {error_count} errors")
 
     except Exception as e:
-        logger.error(f"Fatal error in _to_csv: {str(e)}")
+        logger.error(f"Fatal error in save_roster_to_csv: {str(e)}")
         logger.debug("Full error details:", exc_info=True)
         raise
+
 
 def main():
     """Main function to process CFB dynasty roster data."""
@@ -324,7 +292,7 @@ def main():
 
     try:
         data_folder = os.path.join(downloads_folder, 'cfb_dynasty_data')
-        _to_csv(downloads_folder, data_folder)
+        save_roster_to_csv(downloads_folder, data_folder)
         logger.info("All processing completed successfully!")
 
     except Exception as e:
@@ -336,6 +304,7 @@ def main():
         logger.info("=" * 50)
         logger.info("CFB Dynasty Roster Processing Finished")
         logger.info("=" * 50)
+
 
 if __name__ == "__main__":
     main()
