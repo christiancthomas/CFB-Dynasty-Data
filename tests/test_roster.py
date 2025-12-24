@@ -4,6 +4,7 @@ import os
 import pandas as pd
 import shutil
 import sys
+import tempfile
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -11,57 +12,61 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from cfb_dynasty.data.roster_generator import generate_roster
 from tests.utils import create_mock_roster, create_mock_recruits
 
-DOWNLOADS_FOLDER = os.path.expanduser("~/Downloads")
-MOCK_ROSTER_FILE = os.path.join(DOWNLOADS_FOLDER, "Test_Roster.csv")
-MOCK_RECRUITING_FILE = os.path.join(DOWNLOADS_FOLDER, "Test_Recruiting_Hub.csv")
-OUTPUT_DIR = os.path.join(DOWNLOADS_FOLDER, "test_cfb_dynasty_data")
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, "Test_New_Roster.csv")
 
 class TestRosterScripts(unittest.TestCase):
+    """test suite for roster generation scripts"""
+
+    # class-level variables for test file paths
+    temp_dir = None
+    MOCK_ROSTER_FILE = None
+    MOCK_RECRUITING_FILE = None
+    OUTPUT_DIR = None
+    OUTPUT_FILE = None
 
     @classmethod
     def setUpClass(cls):
-        # Create mock roster CSV
+        # create a temporary directory for test files (works in CI and locally)
+        cls.temp_dir = tempfile.mkdtemp(prefix="cfb_dynasty_test_")
+        cls.MOCK_ROSTER_FILE = os.path.join(cls.temp_dir, "Test_Roster.csv")
+        cls.MOCK_RECRUITING_FILE = os.path.join(cls.temp_dir, "Test_Recruiting_Hub.csv")
+        cls.OUTPUT_DIR = os.path.join(cls.temp_dir, "test_cfb_dynasty_data")
+        cls.OUTPUT_FILE = os.path.join(cls.OUTPUT_DIR, "Test_New_Roster.csv")
+
+        # mock roster CSV
         roster_data = create_mock_roster()
 
-        # Create mock recruiting CSV
+        # mock recruiting CSV
         recruiting_data = create_mock_recruits()
 
-        # Save mock CSV files
-        roster_data.to_csv(MOCK_ROSTER_FILE, index=False)
-        recruiting_data.to_csv(MOCK_RECRUITING_FILE, index=False)
+        # save mock CSV files
+        roster_data.to_csv(cls.MOCK_ROSTER_FILE, index=False)
+        recruiting_data.to_csv(cls.MOCK_RECRUITING_FILE, index=False)
 
     @classmethod
     def tearDownClass(cls):
-        # Remove mock CSV files
-        if os.path.exists(MOCK_ROSTER_FILE):
-            os.remove(MOCK_ROSTER_FILE)
-        if os.path.exists(MOCK_RECRUITING_FILE):
-            os.remove(MOCK_RECRUITING_FILE)
-        if os.path.exists(OUTPUT_FILE):
-            os.remove(OUTPUT_FILE)
-        if os.path.exists(OUTPUT_DIR):
-            shutil.rmtree(OUTPUT_DIR)
+        # remove entire temp directory
+        if cls.temp_dir and os.path.exists(cls.temp_dir):
+            shutil.rmtree(cls.temp_dir)
 
     def test_generate_roster(self):
         """Test that the generate_roster function works correctly with updated column logic"""
         print("test_roster.generate_roster")
 
-        roster_df = pd.read_csv(MOCK_ROSTER_FILE)
-        recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
+        roster_df = pd.read_csv(self.__class__.MOCK_ROSTER_FILE)
+        recruiting_df = pd.read_csv(self.__class__.MOCK_RECRUITING_FILE)
 
         # Test roster generation
         new_roster_df = generate_roster(roster_df, recruiting_df, 'TEXAS TECH')
 
         # Create output directory if needed
-        if not os.path.exists(OUTPUT_DIR):
-            os.makedirs(OUTPUT_DIR)
+        if not os.path.exists(self.__class__.OUTPUT_DIR):
+            os.makedirs(self.__class__.OUTPUT_DIR)
 
         # Save the result
-        new_roster_df.to_csv(OUTPUT_FILE, index=False)
+        new_roster_df.to_csv(self.__class__.OUTPUT_FILE, index=False)
 
         # Test that output file was created
-        self.assertTrue(os.path.exists(OUTPUT_FILE))
+        self.assertTrue(os.path.exists(self.__class__.OUTPUT_FILE))
 
         # Test that the DataFrame has the correct column structure
         expected_columns = [
@@ -135,8 +140,8 @@ class TestRosterScripts(unittest.TestCase):
     def test_incoming_recruits(self):
         # test that only incoming recruits from school = school_name are included in the new roster
         print("test_roster.test_incoming_recruits")
-        roster_df = pd.read_csv(MOCK_ROSTER_FILE)
-        recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
+        roster_df = pd.read_csv(self.__class__.MOCK_ROSTER_FILE)
+        recruiting_df = pd.read_csv(self.__class__.MOCK_RECRUITING_FILE)
         school_name = 'TEXAS TECH'
         new_roster_df = generate_roster(roster_df, recruiting_df, school_name)
 
@@ -155,8 +160,8 @@ class TestRosterScripts(unittest.TestCase):
     def test_archetype(self):
         # test that the archetype column is correctly populated for returning players and incoming recruits
         print("test_roster.test_archetype")
-        roster_df = pd.read_csv(MOCK_ROSTER_FILE)
-        recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
+        roster_df = pd.read_csv(self.__class__.MOCK_ROSTER_FILE)
+        recruiting_df = pd.read_csv(self.__class__.MOCK_RECRUITING_FILE)
         school_name = 'TEXAS TECH'
         new_roster_df = generate_roster(roster_df, recruiting_df, school_name)
 
