@@ -7,6 +7,7 @@ import glob
 from typing import Optional
 from ..utils.log import setup_logging, get_logger
 from ..models.player import Player
+from ..config.constants import YEAR_PROGRESSION
 
 # Create logger for this module
 logger = get_logger(__name__)
@@ -108,18 +109,9 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
 
     # Advance the year for recruits from HS to FR
     logger.debug("Advancing years for incoming recruits")
-    def advance_recruit_year(year):
-        # For recruits, we only need to handle HS -> FR transition
-        year_mapping = {
-            'HS': 'FR',
-            'FR': 'SO',
-            'SO': 'JR',
-            'JR': 'SR',
-            'SR': 'GRADUATED'
-        }
-        return year_mapping.get(year, year)
-
-    recruits_filtered.loc[:, 'YEAR'] = recruits_filtered['YEAR'].apply(advance_recruit_year)
+    recruits_filtered.loc[:, 'YEAR'] = recruits_filtered['YEAR'].apply(
+        lambda year: YEAR_PROGRESSION.get(year, year)
+    )
 
     # Combine the filtered roster data with the recruits
     logger.info("Combining roster with incoming recruits")
@@ -159,7 +151,6 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
             if col not in df.columns:
                 df[col] = default_val
                 logger.debug(f"Added missing column '{col}' with default value")
-            df[col] = default_val
 
     # Ensure TRANSFER OUT column exists (add if missing)
     ensure_columns_exist(new_roster_df, {

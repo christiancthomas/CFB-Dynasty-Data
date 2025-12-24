@@ -1,4 +1,5 @@
 from hashlib import md5
+from ..config.constants import YEAR_PROGRESSION
 
 class Player:
     """
@@ -115,21 +116,9 @@ class Player:
 
         If the player is redshirted, they will advance to the next year without changing their status.
         """
-        year_mapping = {
-            'HS': 'FR',
-            'FR': 'SO',
-            'SO': 'JR',
-            'JR': 'SR',
-            'SR': 'GRADUATED',
-            'FR (RS)': 'SO (RS)',
-            'SO (RS)': 'JR (RS)',
-            'JR (RS)': 'SR (RS)',
-            'SR (RS)': 'GRADUATED'
-            }
-
         if self.redshirt and 'RS' not in self.year:
             self.year += " (RS)"
         else:
-            self.year = year_mapping.get(self.year, self.year)
+            self.year = YEAR_PROGRESSION.get(self.year, self.year)
 
         return self.year

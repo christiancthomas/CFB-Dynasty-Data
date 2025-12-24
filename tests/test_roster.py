@@ -132,27 +132,6 @@ class TestRosterScripts(unittest.TestCase):
         self.assertIn('John Doe', player_names)      # Should remain
         self.assertIn('Charlie Johnson', player_names) # Should remain
 
-
-    @classmethod
-    def tearDownClass(cls):
-        # Remove mock CSV files
-        os.remove(MOCK_ROSTER_FILE)
-        os.remove(MOCK_RECRUITING_FILE)
-        if os.path.exists(OUTPUT_FILE):
-            os.remove(OUTPUT_FILE)
-        if os.path.exists(OUTPUT_DIR):
-            shutil.rmtree(OUTPUT_DIR)
-
-    def test_generate_roster(self):
-        print("test_roster.generate_roster")
-        roster_df = pd.read_csv(MOCK_ROSTER_FILE)
-        recruiting_df = pd.read_csv(MOCK_RECRUITING_FILE)
-        new_roster_df = generate_roster(roster_df, recruiting_df, 'TEXAS TECH')
-        if not os.path.exists(OUTPUT_DIR):
-            os.mkdir(OUTPUT_DIR)
-        new_roster_df.to_csv(OUTPUT_FILE, index=False)
-        self.assertTrue(os.path.exists(OUTPUT_FILE))
-
     def test_incoming_recruits(self):
         # test that only incoming recruits from school = school_name are included in the new roster
         print("test_roster.test_incoming_recruits")

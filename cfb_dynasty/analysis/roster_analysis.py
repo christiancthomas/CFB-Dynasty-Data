@@ -1,7 +1,6 @@
 """Roster analysis functions for CFB Dynasty Data system."""
 
 import pandas as pd
-import glob
 import os
 from ..config.constants import (
     DEV_TRAIT_MULTIPLIERS,
