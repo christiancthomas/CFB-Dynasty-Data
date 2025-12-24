@@ -13,8 +13,8 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from cfb_dynasty import *
+from cfb_dynasty.config.constants import YEAR_PROGRESSION
 import pandas as pd
-import os
 
 
 def analyze_graduation_impact(roster_df):
@@ -61,15 +61,8 @@ def project_future_roster(roster_df, years_ahead=2):
         # Remove graduates
         future_roster = future_roster[future_roster['STATUS'] != 'GRADUATING']
         
-        # Advance all players by one year (simplified)
-        # In reality, you'd use the Player class advance_year method
-        year_mapping = {
-            'FR': 'SO', 'SO': 'JR', 'JR': 'SR', 'SR': 'GRADUATING',
-            'FR (RS)': 'SO (RS)', 'SO (RS)': 'JR (RS)', 
-            'JR (RS)': 'SR (RS)', 'SR (RS)': 'GRADUATING'
-        }
-        
-        future_roster['YEAR'] = future_roster['YEAR'].map(year_mapping)
+        # Advance all players by one year using centralized YEAR_PROGRESSION
+        future_roster['YEAR'] = future_roster['YEAR'].map(YEAR_PROGRESSION)
         future_roster.loc[future_roster['YEAR'] == 'GRADUATING', 'STATUS'] = 'GRADUATING'
         
         # Show position counts

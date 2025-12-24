@@ -35,12 +35,13 @@ CFB-Dynasty-Data/
 │   ├── test_player.py              # Player class tests
 │   ├── test_roster.py              # Roster generation tests
 │   ├── test_analysis.py            # Analysis function tests
-│   └── test_utils.py               # Utility function tests
+│   ├── test_utils.py               # Utility function tests
+│   └── integration_test.py         # End-to-end integration tests
 ├── requirements.txt                # Python dependencies
 └── README.md                       # Project overview
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -67,8 +68,8 @@ pip install -r requirements.txt
 
 ```python
 from cfb_dynasty import (
-    Player, 
-    generate_roster, 
+    Player,
+    generate_roster,
     process_roster_and_create_recruiting_plan,
     load_roster
 )
@@ -104,7 +105,7 @@ chmod +x scripts/dynasty.sh
 ./scripts/dynasty.sh
 ```
 
-## 📊 Features
+## Features
 
 ### Player Management
 - **Player Class**: Comprehensive player data model with year advancement logic
@@ -126,7 +127,7 @@ chmod +x scripts/dynasty.sh
 - **Export Capabilities**: Generate analysis reports and recruiting plans
 - **Logging**: Comprehensive logging for debugging and monitoring
 
-## 🧪 Testing
+## Testing
 
 Run the test suite to ensure everything is working correctly:
 
@@ -141,7 +142,7 @@ python -m pytest tests/test_player.py -v
 python -m pytest tests/ --cov=cfb_dynasty --cov-report=html
 ```
 
-## 📋 Configuration
+## Configuration
 
 ### Position Requirements
 
@@ -175,7 +176,7 @@ DEV_TRAIT_MULTIPLIERS = {
 }
 ```
 
-## 📈 Analysis Features
+## Analysis Features
 
 ### Player Valuation Formula
 
@@ -202,7 +203,7 @@ Where:
 - **C- (70-79)**: Major weakness
 - **F (<70)**: Critical need
 
-## 🔧 Development
+## Development
 
 ### Adding New Features
 
@@ -220,13 +221,13 @@ Where:
 - Add docstrings to all public functions
 - Maintain test coverage above 80%
 
-## 📄 File Formats
+## File Formats
 
 ### Roster CSV Format
 
 Required columns:
 ```
-FIRST NAME, LAST NAME, POSITION, YEAR, RATING, BASE RATING, 
+FIRST NAME, LAST NAME, POSITION, YEAR, RATING, BASE RATING,
 ARCHETYPE, DEV TRAIT, REDSHIRT, CUT, DRAFTED, STATUS
 ```
 
@@ -237,13 +238,12 @@ Required columns:
 FIRST NAME, LAST NAME, POSITION, COMMITTED TO, YEAR, RATING
 ```
 
-## 🐛 Known Issues
+## Known Issues
 
-1. Some player integration utilities are not fully implemented (3/27 tests failing)
-2. Position mappings may need updates for CFB 26 compatibility
-3. Archetype valuations require validation
+1. Position mappings may need updates for CFB 26 compatibility
+2. Archetype valuations require validation
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -252,12 +252,11 @@ FIRST NAME, LAST NAME, POSITION, COMMITTED TO, YEAR, RATING
 5. Ensure all tests pass
 6. Submit a pull request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 📞 Support
-
+## Support
 For questions, issues, or feature requests:
 - Open an issue on GitHub
 - Check existing documentation
@@ -265,6 +264,6 @@ For questions, issues, or feature requests:
 
 ---
 
-**Version**: 1.0.0  
-**Python**: 3.13+ required  
-**Dependencies**: pandas, pytest
+**Version**: 1.0.0
+**Python**: 3.11+ required
+**Dependencies**: pandas, numpy, matplotlib, seaborn, plotly, pytest

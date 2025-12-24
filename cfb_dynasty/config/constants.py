@@ -14,6 +14,19 @@ REMAINING_YEARS = {
 # Redshirt discount and starter counts
 RS_DISCOUNT = 0.05
 
+# Year progression mapping for advancing player years
+YEAR_PROGRESSION = {
+    'HS': 'FR',
+    'FR': 'SO',
+    'SO': 'JR',
+    'JR': 'SR',
+    'SR': 'GRADUATED',
+    'FR (RS)': 'SO (RS)',
+    'SO (RS)': 'JR (RS)',
+    'JR (RS)': 'SR (RS)',
+    'SR (RS)': 'GRADUATED'
+}
+
 # Define minimum and ideal roster sizes per position
 # TODO: Update positions and archetypes for CFB 26
 # TODO: CONFIRM ARCHETYPE VALUATIONS
@@ -229,6 +242,6 @@ DEFAULT_POSITION_REQUIREMENTS = {
 STARTERS_COUNT = {
     'QB': 1, 'HB': 2, 'FB': 1, 'WR': 3, 'TE': 1,
     'LT': 1, 'LG': 1, 'C': 1, 'RG': 1, 'RT': 1,
-    'LEDG': 1, 'REDG': 1, 'DT': 2, 'WILL': 1, 'MLB': 1, 'SAM': 1,
+    'LEDG': 1, 'REDG': 1, 'DT': 2, 'WILL': 1, 'MIKE': 1, 'SAM': 1,
     'CB': 2, 'FS': 1, 'SS': 1, 'K': 1, 'P': 1
 }

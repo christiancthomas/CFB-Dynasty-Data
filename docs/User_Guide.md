@@ -6,10 +6,10 @@ Welcome to CFB Dynasty Data! This guide will help you get up and running quickly
 
 ### What is CFB Dynasty Data?
 
-CFB Dynasty Data is a comprehensive toolkit for managing college football dynasty mode in video games. It helps you:
+CFB Dynasty Data is a comprehensive toolkit for managing college football dynasty mode in the EA College Football series. It helps you:
 
 - **Evaluate Players**: Calculate dynasty value based on ratings, development traits, and eligibility
-- **Plan Recruiting**: Identify position needs and scheme fit issues  
+- **Plan Recruiting**: Identify position needs and scheme fit issues
 - **Manage Rosters**: Track player progression year-over-year
 - **Analyze Performance**: Generate detailed reports and visualizations
 
@@ -65,7 +65,7 @@ print("Analysis complete!")
 The analysis generates several CSV files in `~/Downloads/cfb_dynasty_data/`:
 
 - **`player_values_analysis.csv`**: Complete roster with calculated values and status
-- **`recruiting_plan_analysis.csv`**: Position-by-position recruiting priorities  
+- **`recruiting_plan_analysis.csv`**: Position-by-position recruiting priorities
 - **`position_analysis_detailed.csv`**: Detailed breakdowns by position
 
 ## Understanding Player Values
@@ -84,7 +84,7 @@ Player values help you make dynasty decisions by considering:
 ### Player Status Categories
 
 - **🟢 SAFE**: High-value players to keep
-- **🟡 AT RISK**: Moderate value, consider for development  
+- **🟡 AT RISK**: Moderate value, consider for development
 - **🔴 CUT**: Low value, candidates for cutting
 - **🎓 GRADUATING**: Will leave after this season
 
@@ -102,7 +102,7 @@ Positions are graded on team strength:
 
 The system identifies three priority levels:
 
-1. **🚨 HIGH PRIORITY**: 
+1. **🚨 HIGH PRIORITY**:
    - Below minimum roster requirements
    - Graded D or F in strength
    - Critical scheme fit issues
@@ -113,7 +113,7 @@ The system identifies three priority levels:
    - Some scheme concerns
 
 3. **🟢 LOW PRIORITY**:
-   - Above minimum requirements  
+   - Above minimum requirements
    - Graded B+ or better
    - Good scheme fit
 
@@ -165,7 +165,7 @@ from cfb_dynasty import *
 def find_transfer_targets(roster_df, max_value=100):
     """Find players who might transfer out."""
     at_risk = roster_df[
-        (roster_df['VALUE'] < max_value) & 
+        (roster_df['VALUE'] < max_value) &
         (roster_df['STATUS'] != 'GRADUATING')
     ]
     return at_risk[['FIRST NAME', 'LAST NAME', 'POSITION', 'VALUE']]
@@ -193,7 +193,7 @@ print(f"Found {len(transfer_risks)} potential transfer candidates")
 
 ### Recruiting Strategy
 
-1. **Position Targeting**: Focus limited resources effectively  
+1. **Position Targeting**: Focus limited resources effectively
 2. **Scheme Fit**: Recruit players who match your system
 3. **Development vs Ready**: Balance immediate impact vs potential
 4. **Depth Management**: Maintain adequate numbers without over-recruiting
@@ -221,7 +221,7 @@ print(f"Found {len(transfer_risks)} potential transfer candidates")
 ### Common Issues
 
 **"No CSV files found"**
-- Ensure files are in `~/Downloads` 
+- Ensure files are in `~/Downloads`
 - Check filename contains "roster" (case insensitive)
 - Verify file is actually CSV format
 
@@ -268,7 +268,7 @@ Once you're comfortable with basic analysis, try:
 
 1. **Custom Metrics**: Create your own player evaluation formulas
 2. **Visualization**: Build charts and graphs of your data
-3. **Automation**: Set up automated analysis pipelines  
+3. **Automation**: Set up automated analysis pipelines
 4. **Integration**: Connect with other dynasty management tools
 5. **Sharing**: Export results to share with online dynasty communities
 
@@ -305,7 +305,7 @@ updated_roster, _ = process_roster_and_create_recruiting_plan("updated_roster.cs
 print("Recruiting adjustments needed based on season performance...")
 ```
 
-### Offseason Planning  
+### Offseason Planning
 ```python
 # 1. Handle graduations and departures
 returning_players = roster_df[roster_df['STATUS'] != 'GRADUATING']
