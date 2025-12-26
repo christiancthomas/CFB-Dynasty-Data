@@ -1,5 +1,6 @@
 """Roster analysis functions for CFB Dynasty Data system."""
 
+import glob
 import pandas as pd
 import os
 from ..config.constants import (
@@ -7,7 +8,8 @@ from ..config.constants import (
     REMAINING_YEARS,
     RS_DISCOUNT,
     DEFAULT_POSITION_REQUIREMENTS,
-    STARTERS_COUNT
+    STARTERS_COUNT,
+    POSITION_ORDER
 )
 from ..utils.file_utils import _clean_csv_borders
 
@@ -53,26 +55,14 @@ def player_status(row):
 
 def calculate_position_grade(avg_value):
     """Calculate position strength grade based on average value."""
-    if avg_value >= 150:
-        return 'A+'
-    elif avg_value >= 140:
-        return 'A'
-    elif avg_value >= 130:
-        return 'A-'
-    elif avg_value >= 120:
-        return 'B+'
-    elif avg_value >= 110:
-        return 'B'
-    elif avg_value >= 100:
-        return 'B-'
-    elif avg_value >= 90:
-        return 'C+'
-    elif avg_value >= 80:
-        return 'C'
-    elif avg_value >= 70:
-        return 'C-'
-    else:
-        return 'F'
+    thresholds = [
+        (150, 'A+'), (140, 'A'), (130, 'A-'), (120, 'B+'),
+        (110, 'B'), (100, 'B-'), (90, 'C+'), (80, 'C'), (70, 'C-')
+    ]
+    for threshold, grade in thresholds:
+        if avg_value >= threshold:
+            return grade
+    return 'F'
 
 
 def calculate_blended_measure(df, position):
@@ -172,23 +162,19 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
         'FIRST NAME', 'LAST NAME', 'YEAR', 'POSITION',
         'OVERALL', 'BASE OVERALL', 'ARCHETYPE', 'DEV TRAIT'
     ]
-    missing_columns = [col for col in required_columns if col not in roster_df.columns]
-    if missing_columns:
-        raise ValueError(f"CSV file is missing required columns: {missing_columns}")
+    missing = [col for col in required_columns if col not in roster_df.columns]
+    if missing:
+        raise ValueError(f"CSV file is missing required columns: {missing}")
 
     # Convert numeric columns to proper types (they may be strings from CSV)
     roster_df['OVERALL'] = pd.to_numeric(roster_df['OVERALL'], errors='coerce')
     roster_df['BASE OVERALL'] = pd.to_numeric(roster_df['BASE OVERALL'], errors='coerce')
 
     # Add optional columns with defaults if missing
-    if 'VALUE' not in roster_df.columns:
-        roster_df['VALUE'] = None
-    if 'STATUS' not in roster_df.columns:
-        roster_df['STATUS'] = None
-    if 'CUT' not in roster_df.columns:
-        roster_df['CUT'] = False
-    if 'DRAFTED' not in roster_df.columns:
-        roster_df['DRAFTED'] = ''
+    column_defaults = {'VALUE': None, 'STATUS': None, 'CUT': False, 'DRAFTED': ''}
+    for col, default in column_defaults.items():
+        if col not in roster_df.columns:
+            roster_df[col] = default
     if 'REDSHIRT' not in roster_df.columns:
         roster_df['REDSHIRT'] = roster_df['YEAR'].str.contains(r'\(RS\)', na=False)
 
@@ -222,13 +208,8 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
     }
 
     # Sort roster by position order and rating descending
-    position_order = [
-        'QB', 'HB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 
-        'LEDG', 'REDG', 'DT', 'WILL', 'MIKE', 'SAM', 
-        'CB', 'FS', 'SS', 'K', 'P', 'ATH'
-    ]
     roster_df['POSITION'] = pd.Categorical(
-        roster_df['POSITION'], categories=position_order, ordered=True
+        roster_df['POSITION'], categories=POSITION_ORDER, ordered=True
     )
     roster_df.sort_values(by=['POSITION', 'OVERALL'], ascending=[True, False], inplace=True)
 
@@ -242,17 +223,12 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
     }).fillna(0)
 
     # Determine the priority level for recruiting at each position
-    def determine_priority(row):
-        if row['Current Count'] < row['Min Required']:
-            return 'HIGH'
-        elif row['Grade'] in ['D', 'F']:
-            return 'HIGH'
-        elif row['Grade'] in ['C']:
-            return 'MEDIUM'
-        else:
-            return 'LOW'
-
-    recruiting_plan['Priority'] = recruiting_plan.apply(determine_priority, axis=1)
+    recruiting_plan['Priority'] = recruiting_plan.apply(
+        lambda row: 'HIGH' if row['Current Count'] < row['Min Required'] or row['Grade'] in ['D', 'F']
+                    else 'MEDIUM' if row['Grade'] == 'C'
+                    else 'LOW',
+        axis=1
+    )
 
     return roster_df, recruiting_plan
 
