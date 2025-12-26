@@ -7,20 +7,102 @@ import pandas as pd
 
 DEFAULT_FOLDER = os.path.expanduser('~/Downloads')
 
+# Expected column names to help identify the real header row
+EXPECTED_HEADERS = {'REDSHIRT', 'FIRST NAME', 'LAST NAME', 'YEAR', 'POSITION', 'OVERALL', 'BASE OVERALL'}
+
+
+def _is_empty_column(series):
+    """Check if a column is entirely empty/unnamed."""
+    return series.isna().all() or (series.astype(str).str.strip() == '').all()
+
+
+def _is_empty_or_unnamed(col_name):
+    """Check if a column name indicates an empty/border column."""
+    if pd.isna(col_name):
+        return True
+    col_str = str(col_name).strip()
+    return col_str == '' or col_str.startswith('Unnamed')
+
+
+def _clean_csv_borders(df):
+    """
+    Clean CSV data exported from spreadsheets with design borders.
+
+    Google Sheets and Excel files with colored borders/design elements
+    often export with empty first row(s) and/or empty first column(s).
+    This function dynamically detects and removes any number of empty borders.
+    """
+    if df.empty:
+        return df
+
+    rows_removed = 0
+    cols_removed = 0
+
+    # Remove empty leading columns (left border)
+    while len(df.columns) > 0:
+        first_col_name = df.columns[0]
+        if _is_empty_or_unnamed(first_col_name) and _is_empty_column(df.iloc[:, 0]):
+            df = df.iloc[:, 1:]
+            cols_removed += 1
+        else:
+            break
+
+    # Remove empty trailing columns (right border)
+    while len(df.columns) > 0:
+        last_col_name = df.columns[-1]
+        if _is_empty_or_unnamed(last_col_name) and _is_empty_column(df.iloc[:, -1]):
+            df = df.iloc[:, :-1]
+            cols_removed += 1
+        else:
+            break
+
+    # Check if the current column headers are actually empty/unnamed
+    # and the real headers are in a data row
+    if len(df.columns) > 0 and _is_empty_or_unnamed(df.columns[0]):
+        # Search for the real header row (up to first 10 rows)
+        for i in range(min(10, len(df))):
+            row = df.iloc[i]
+            # Check if this row contains expected header names
+            row_values = {str(v).strip().upper() for v in row.values if pd.notna(v)}
+            if row_values & EXPECTED_HEADERS:
+                # Found the header row - promote it and drop rows above
+                df.columns = df.iloc[i]
+                df = df.iloc[i + 1:].reset_index(drop=True)
+                rows_removed = i + 1
+                break
+
+    # Remove any remaining empty rows at the start
+    while len(df) > 0 and df.iloc[0].isna().all():
+        df = df.iloc[1:].reset_index(drop=True)
+        rows_removed += 1
+
+    # Remove empty rows at the end
+    while len(df) > 0 and df.iloc[-1].isna().all():
+        df = df.iloc[:-1]
+
+    # Clean column names - strip whitespace
+    df.columns = [str(col).strip() if pd.notna(col) else col for col in df.columns]
+
+    # Report what was cleaned
+    if rows_removed > 0 or cols_removed > 0:
+        print(f"🔧 Cleaned spreadsheet borders: removed {rows_removed} row(s), {cols_removed} column(s)")
+
+    return df
+
 
 def load_roster(folder=None):
     """
     Load roster CSV file from specified folder.
-    
+
     Args:
         folder (str): Folder path to search for roster files (default: ~/Downloads)
-        
+
     Returns:
         pd.DataFrame or None: Loaded roster DataFrame or None if error
     """
     if folder is None:
         folder = DEFAULT_FOLDER
-    
+
     # Find roster files
     roster_files = glob.glob(os.path.join(folder, '*[Rr]oster.csv'))
 
@@ -39,6 +121,11 @@ def load_roster(folder=None):
 
         try:
             roster_df = pd.read_csv(roster_path)
+
+            # Handle CSVs exported from Google Sheets with design borders
+            # These may have empty first row(s) and/or empty first column(s)
+            roster_df = _clean_csv_borders(roster_df)
+
             print(f"✅ Successfully loaded {len(roster_df)} players")
             print(f"📋 Columns: {list(roster_df.columns)}")
 
@@ -64,13 +151,13 @@ def export_files(folder=None, roster_df=None, recruiting_plan=None, position_req
         roster_df (pd.DataFrame): Processed roster DataFrame with player values and status
         recruiting_plan (pd.DataFrame): DataFrame with recruiting priorities
         position_requirements (dict): Dictionary with position requirements for detailed analysis
-        
+
     Returns:
         bool: True if export successful, False otherwise
     """
     if folder is None:
         folder = DEFAULT_FOLDER
-        
+
     if roster_df is None:
         print("❌ Cannot export - no roster data provided.")
         return False

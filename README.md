@@ -9,7 +9,7 @@ A comprehensive dynasty roster management and valuation tool for College Footbal
 git clone https://github.com/your-username/CFB-Dynasty-Data.git
 cd CFB-Dynasty-Data
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source . ./venv/bin/activate  # Windows: . .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
