@@ -126,6 +126,12 @@ def load_roster(folder=None):
             # These may have empty first row(s) and/or empty first column(s)
             roster_df = _clean_csv_borders(roster_df)
 
+            # Convert numeric columns to proper types (they may be strings from CSV)
+            if 'OVERALL' in roster_df.columns:
+                roster_df['OVERALL'] = pd.to_numeric(roster_df['OVERALL'], errors='coerce')
+            if 'BASE OVERALL' in roster_df.columns:
+                roster_df['BASE OVERALL'] = pd.to_numeric(roster_df['BASE OVERALL'], errors='coerce')
+
             print(f"✅ Successfully loaded {len(roster_df)} players")
             print(f"📋 Columns: {list(roster_df.columns)}")
 
