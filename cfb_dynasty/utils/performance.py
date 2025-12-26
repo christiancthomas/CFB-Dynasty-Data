@@ -123,8 +123,7 @@ def optimized_value_calculation(df: pd.DataFrame) -> pd.DataFrame:
     dev_multipliers = optimized_df['DEV TRAIT'].map(DEV_TRAIT_MULTIPLIERS).fillna(1.0)
     remaining_years = optimized_df['YEAR'].map(REMAINING_YEARS).fillna(0)
     
-    # Handle both column name formats
-    base_rating = optimized_df.get('BASE RATING', optimized_df.get('BASE OVERALL', 0))
+    base_rating = optimized_df['BASE OVERALL']
     
     # Vectorized redshirt discount calculation
     redshirt_discount = optimized_df['YEAR'].str.contains(r'\(RS\)', na=False) * RS_DISCOUNT

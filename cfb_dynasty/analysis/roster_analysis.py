@@ -9,6 +9,7 @@ from ..config.constants import (
     DEFAULT_POSITION_REQUIREMENTS,
     STARTERS_COUNT
 )
+from ..utils.file_utils import _clean_csv_borders
 
 
 def calculate_player_value(row, dev_trait_multipliers=None, rs_discount_rate=None):
@@ -24,8 +25,7 @@ def calculate_player_value(row, dev_trait_multipliers=None, rs_discount_rate=Non
     dev_multiplier = dev_trait_multipliers.get(row['DEV TRAIT'], 1.00)
     remaining_dev_years = REMAINING_YEARS.get(row['YEAR'], 0)
     
-    # Handle both 'BASE RATING' and 'BASE OVERALL' column names for backward compatibility
-    base_rating = row.get('BASE RATING', row.get('BASE OVERALL', 0))
+    base_rating = row.get('BASE OVERALL', 0)
     
     value = round(
         base_rating * dev_multiplier * (1 + remaining_dev_years / 4) * (1 - discount), 2
@@ -165,20 +165,28 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
         position_requirements = DEFAULT_POSITION_REQUIREMENTS
     
     roster_df = pd.read_csv(roster_path)
+    roster_df = _clean_csv_borders(roster_df)
 
     # Ensure the required columns are present
     required_columns = [
-        'POSITION', 'FIRST NAME', 'LAST NAME', 'YEAR', 'RATING', 
-        'ARCHETYPE', 'DEV TRAIT', 'VALUE', 'STATUS', 'CUT', 'REDSHIRT', 'DRAFTED'
+        'FIRST NAME', 'LAST NAME', 'YEAR', 'POSITION',
+        'OVERALL', 'BASE OVERALL', 'ARCHETYPE', 'DEV TRAIT'
     ]
-    # Check for either BASE RATING or BASE OVERALL
-    has_base_rating = 'BASE RATING' in roster_df.columns or 'BASE OVERALL' in roster_df.columns
-    if not has_base_rating:
-        required_columns.append('BASE RATING')  # Will trigger missing column error
-    
     missing_columns = [col for col in required_columns if col not in roster_df.columns]
     if missing_columns:
         raise ValueError(f"CSV file is missing required columns: {missing_columns}")
+
+    # Add optional columns with defaults if missing
+    if 'VALUE' not in roster_df.columns:
+        roster_df['VALUE'] = None
+    if 'STATUS' not in roster_df.columns:
+        roster_df['STATUS'] = None
+    if 'CUT' not in roster_df.columns:
+        roster_df['CUT'] = False
+    if 'DRAFTED' not in roster_df.columns:
+        roster_df['DRAFTED'] = ''
+    if 'REDSHIRT' not in roster_df.columns:
+        roster_df['REDSHIRT'] = roster_df['YEAR'].str.contains(r'\(RS\)', na=False)
 
     # Calculate player values
     roster_df['VALUE'] = roster_df.apply(calculate_player_value, axis=1)
@@ -190,7 +198,7 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
     roster_df, scheme_fit_df = scheme_fit(roster_df, position_requirements)
 
     # Determine the best player at each position
-    roster_df['Best at Position'] = roster_df.groupby('POSITION')['RATING'].transform(
+    roster_df['Best at Position'] = roster_df.groupby('POSITION')['OVERALL'].transform(
         lambda x: x == x.max()
     )
 
@@ -218,7 +226,7 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
     roster_df['POSITION'] = pd.Categorical(
         roster_df['POSITION'], categories=position_order, ordered=True
     )
-    roster_df.sort_values(by=['POSITION', 'RATING'], ascending=[True, False], inplace=True)
+    roster_df.sort_values(by=['POSITION', 'OVERALL'], ascending=[True, False], inplace=True)
 
     # Create the recruiting plan DataFrame
     recruiting_plan = pd.DataFrame({

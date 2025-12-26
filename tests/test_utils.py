@@ -236,8 +236,8 @@ class TestCleanCsvBorders(unittest.TestCase):
         # Simulate CSV where pandas reads empty first row as headers
         # and real headers are in row 0 of data
         df = pd.DataFrame({
-            'Unnamed: 0': ['FIRST NAME', 'John', 'Jane'],
-            'Unnamed: 1': ['LAST NAME', 'Doe', 'Smith'],
+            'Unnamed: 0': ['FIRST NAME', 'Arch', 'Jeremiah'],
+            'Unnamed: 1': ['LAST NAME', 'Manning', 'Smith'],
             'Unnamed: 2': ['POSITION', 'QB', 'WR'],
             'Unnamed: 3': ['YEAR', 'FR', 'SO']
         })
