@@ -7,7 +7,7 @@ import glob
 from typing import Optional
 from ..utils.log import setup_logging, get_logger
 from ..models.player import Player
-from ..config.constants import YEAR_PROGRESSION
+from ..config.constants import YEAR_PROGRESSION, POSITION_ORDER
 
 # Create logger for this module
 logger = get_logger(__name__)
@@ -88,7 +88,7 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
         (roster_copy['CUT'] != True) &
         ((roster_copy['DRAFTED'].isna()) | (roster_copy['DRAFTED'] == '')) &
         (roster_copy['TRANSFER OUT'] != True)
-    ].copy()
+    ]
 
     filtered_count = len(filtered_roster_df)
     removed_count = initial_count - filtered_count
@@ -120,16 +120,10 @@ def generate_roster(roster_df: pd.DataFrame, recruits_df: pd.DataFrame, school_n
     final_count = len(new_roster_df)
     logger.info(f"Combined roster size: {final_count} players ({filtered_count} returning + {commit_count} recruits)")
 
-    # Define the position order
-    position_order = [
-        'QB', 'HB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT',
-        'LEDG', 'REDG', 'DT', 'WILL', 'MIKE', 'SAM', 'CB', 'FS', 'SS', 'K', 'P', 'ATH'
-    ]
-
     # Create a categorical type for the position column based on the defined order
     logger.debug("Setting up position-based sorting")
     new_roster_df['POSITION'] = pd.Categorical(
-        new_roster_df['POSITION'], categories=position_order, ordered=True
+        new_roster_df['POSITION'], categories=POSITION_ORDER, ordered=True
     )
 
     # Sort by position first, then by original rating if it exists
