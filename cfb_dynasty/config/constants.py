@@ -238,6 +238,12 @@ DEFAULT_POSITION_REQUIREMENTS = {
     }
 }
 
+# Position order for sorting and categorical operations
+POSITION_ORDER = [
+    'QB', 'HB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT',
+    'LEDG', 'REDG', 'DT', 'WILL', 'MIKE', 'SAM', 'CB', 'FS', 'SS', 'K', 'P', 'ATH'
+]
+
 # Position depth
 STARTERS_COUNT = {
     'QB': 1, 'HB': 2, 'FB': 1, 'WR': 3, 'TE': 1,
