@@ -8,6 +8,7 @@ multi-year planning, custom analysis, and automated decision making.
 
 import sys
 import os
+import glob
 
 # Add the project root to Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -213,8 +214,14 @@ def main():
             return
         
         print("🔍 Running comprehensive analysis...")
+        # Find the roster file in Downloads
+        downloads_folder = os.path.expanduser('~/Downloads')
+        roster_files = glob.glob(os.path.join(downloads_folder, '*[Rr]oster.csv'))
+        if not roster_files:
+            print("❌ No roster file found in Downloads")
+            return
         analyzed_roster, recruiting_plan = process_roster_and_create_recruiting_plan(
-            "roster.csv"  # Auto-detected by load_roster
+            roster_files[0]  # Use the first roster file found
         )
         
         # Run advanced analyses
