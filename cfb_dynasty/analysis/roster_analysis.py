@@ -176,6 +176,10 @@ def process_roster_and_create_recruiting_plan(roster_path, position_requirements
     if missing_columns:
         raise ValueError(f"CSV file is missing required columns: {missing_columns}")
 
+    # Convert numeric columns to proper types (they may be strings from CSV)
+    roster_df['OVERALL'] = pd.to_numeric(roster_df['OVERALL'], errors='coerce')
+    roster_df['BASE OVERALL'] = pd.to_numeric(roster_df['BASE OVERALL'], errors='coerce')
+
     # Add optional columns with defaults if missing
     if 'VALUE' not in roster_df.columns:
         roster_df['VALUE'] = None
